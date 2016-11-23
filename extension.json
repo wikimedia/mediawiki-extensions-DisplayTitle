@@ -1,0 +1,32 @@
+{
+	"name": "DisplayTitle",
+	"version": "1.0",
+	"author": [
+		"[https://www.mediawiki.org/wiki/User:Cindy.cicalese Cindy Cicalese]"
+	],
+	"url": "https://www.mediawiki.org/wiki/Extension:DisplayTitle",
+	"descriptionmsg": "displaytitle-desc",
+	"type": "parserhook",
+	"MessagesDirs": {
+		"DisplayTitle": [
+			"i18n"
+		]
+	},
+	"ExtensionMessagesFiles": {
+		"DisplayTitleMagic": "DisplayTitle.i18n.magic.php"
+	},
+	"AutoloadClasses": {
+		"DisplayTitleHooks": "DisplayTitleHooks.php"
+	},
+	"Hooks": {
+		"ParserFirstCallInit": "DisplayTitleHooks::onParserFirstCallInit",
+		"ParserBeforeStrip": "DisplayTitleHooks::onParserBeforeStrip",
+		"BeforePageDisplay": "DisplayTitleHooks::onBeforePageDisplay",
+		"LinkBegin": "DisplayTitleHooks::onLinkBegin",
+		"SelfLinkBegin": "DisplayTitleHooks::onSelfLinkBegin"
+	},
+	"config": {
+		"DisplayTitleHideSubtitle": false
+	},
+	"manifest_version": 1
+}
