@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"Gomoko"
+		]
+	},
+	"displaytitle-desc": "Utilise la propriété displaytitle de la page dans les textes de lien, les sous-titres et le titre de la page de discussion ; fournit une fonction à l’analyseur pour rechercher displaytitle",
+	"displaytitle-talkpagetitle": "Discuter de $1"
+}
