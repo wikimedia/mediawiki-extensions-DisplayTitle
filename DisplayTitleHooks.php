@@ -177,14 +177,16 @@ class DisplayTitleHooks {
 		$pagetitle = $title->getPrefixedText();
 		// remove fragment
 		$title = Title::newFromText( $pagetitle );
-		$values = PageProps::getInstance()->getProperties( $title, 'displaytitle' );
-		$id = $title->getArticleID();
-		if ( array_key_exists( $id, $values ) ) {
-			$value = $values[$id];
-			if ( trim( str_replace( '&#160;', '', strip_tags( $value ) ) ) !== '' &&
-				$value !== $pagetitle ) {
-				$displaytitle = $value;
-				return true;
+		if ( $title instanceof Title ) {
+			$values = PageProps::getInstance()->getProperties( $title, 'displaytitle' );
+			$id = $title->getArticleID();
+			if ( array_key_exists( $id, $values ) ) {
+				$value = $values[$id];
+				if ( trim( str_replace( '&#160;', '', strip_tags( $value ) ) ) !== '' &&
+					$value !== $pagetitle ) {
+					$displaytitle = $value;
+					return true;
+				}
 			}
 		}
 		return false;
