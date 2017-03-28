@@ -1,8 +1,9 @@
 {
 	"name": "DisplayTitle",
-	"version": "1.1",
+	"version": "1.2",
 	"author": [
-		"[https://www.mediawiki.org/wiki/User:Cindy.cicalese Cindy Cicalese]"
+		"[https://www.mediawiki.org/wiki/User:Cindy.cicalese Cindy Cicalese]",
+		"[https://www.semantic-mediawiki.org/wiki/User:Oetterer Tobias Oetterer]"
 	],
 	"url": "https://www.mediawiki.org/wiki/Extension:DisplayTitle",
 	"descriptionmsg": "displaytitle-desc",
@@ -16,13 +17,15 @@
 		"DisplayTitleMagic": "DisplayTitle.i18n.magic.php"
 	},
 	"AutoloadClasses": {
-		"DisplayTitleHooks": "DisplayTitleHooks.php"
+		"DisplayTitleHooks": "DisplayTitleHooks.php",
+		"DisplayTitleLuaLibrary": "DisplayTitleLuaLibrary.php"
 	},
 	"Hooks": {
 		"ParserFirstCallInit": "DisplayTitleHooks::onParserFirstCallInit",
 		"ParserBeforeStrip": "DisplayTitleHooks::onParserBeforeStrip",
 		"BeforePageDisplay": "DisplayTitleHooks::onBeforePageDisplay",
 		"LinkBegin": "DisplayTitleHooks::onLinkBegin",
+		"ScribuntoExternalLibraries": "DisplayTitleHooks::onScribuntoExternalLibraries",
 		"SelfLinkBegin": "DisplayTitleHooks::onSelfLinkBegin"
 	},
 	"config": {

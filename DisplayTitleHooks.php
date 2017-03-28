@@ -165,6 +165,23 @@ class DisplayTitleHooks {
 	}
 
 	/**
+	 * Implements ScribuntoExternalLibraries hook.
+	 * See https://www.mediawiki.org/wiki/Extension:Scribunto#Other_pages
+	 * Handle Scribunto integration
+	 *
+	 * @since 1.2
+	 * @param string $engine engine in use
+	 * @param array &$extraLibraries list of registered libraries
+	 * @return bool continue checking hooks
+	 */
+	public static function onScribuntoExternalLibraries( $engine, array &$extraLibraries ) {
+		if ( $engine === 'lua' ) {
+			$extraLibraries['mw.ext.displaytitle'] = 'DisplayTitleLuaLibrary';
+		}
+		return true;
+	}
+
+	/**
 	 * Get displaytitle page property text.
 	 *
 	 * @since 1.0
