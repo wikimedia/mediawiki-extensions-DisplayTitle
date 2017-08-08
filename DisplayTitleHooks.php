@@ -58,10 +58,6 @@ class DisplayTitleHooks {
 	 * Implements LinkBegin hook.
 	 * See https://www.mediawiki.org/wiki/Manual:Hooks/LinkBegin
 	 * Handle links. Implements LinkBegin hook of Linker class.
-	 * If a link is customized by a user (e. g. [[Target|Text]]) it should
-	 * remain intact. Let us assume a link is not customized if its html is
-	 * the prefixed or (to support Semantic MediaWiki queries) non-prefixed title
-	 * of the target page.
 	 *
 	 * @since 1.0
 	 * @param string $dummy no longer used
@@ -75,18 +71,7 @@ class DisplayTitleHooks {
 	 */
 	public static function onLinkBegin( $dummy, Title $target, &$html,
 		&$customAttribs, &$query, &$options, &$ret ) {
-		if ( isset( $html ) && is_string( $html ) ) {
-			$title = Title::newFromText( $html );
-			if ( !is_null( $title ) &&
-				$title->getText() === $target->getText() &&
-				( $title->getSubjectNsText() === $target->getSubjectNsText() ||
-				$title->getSubjectNsText() === '' ) ) {
-				self::getDisplayTitle( $target, $html );
-			}
-		} else {
-			self::getDisplayTitle( $target, $html );
-		}
-		return true;
+		return self::handleLink( $target, $html );
 	}
 
 	/**
@@ -104,7 +89,34 @@ class DisplayTitleHooks {
 	 */
 	public static function onSelfLinkBegin( Title $nt, &$html, &$trail,
 		&$prefix, &$ret ) {
-		self::getDisplayTitle( $nt, $html );
+		return self::handleLink( $nt, $html );
+	}
+
+	/**
+	 * Helper function. Determines link text for self-links and standard links.
+	 *
+	 * Handle links. If a link is customized by a user (e. g. [[Target|Text]])
+	 * it should remain intact. Let us assume a link is not customized if its
+	 * html is the prefixed or (to support Semantic MediaWiki queries)
+	 * non-prefixed title of the target page.
+	 *
+	 * @since 1.3
+	 * @param Title $target the Title object that the link is pointing to
+	 * @param string &$html the HTML of the link text
+	 * @return bool continue checking hooks
+	 */
+	private static function handleLink( Title $target, &$html ) {
+		if ( isset( $html ) && is_string( $html ) ) {
+			$title = Title::newFromText( $html );
+			if ( !is_null( $title ) &&
+				$title->getText() === $target->getText() &&
+				( $title->getSubjectNsText() === $target->getSubjectNsText() ||
+				$title->getSubjectNsText() === '' ) ) {
+				self::getDisplayTitle( $target, $html );
+			}
+		} else {
+			self::getDisplayTitle( $target, $html );
+		}
 		return true;
 	}
 
