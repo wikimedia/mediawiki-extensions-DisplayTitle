@@ -8,6 +8,7 @@
 	"url": "https://www.mediawiki.org/wiki/Extension:DisplayTitle",
 	"descriptionmsg": "displaytitle-desc",
 	"type": "parserhook",
+	"license-name": "MIT",
 	"MessagesDirs": {
 		"DisplayTitle": [
 			"i18n"
