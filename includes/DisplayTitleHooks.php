@@ -1,25 +1,4 @@
 <?php
-/*
- * Copyright (c) 2016 The MITRE Corporation
- *
- * Permission is hereby granted, free of charge, to any person obtaining a
- * copy of this software and associated documentation files (the "Software"),
- * to deal in the Software without restriction, including without limitation
- * the rights to use, copy, modify, merge, publish, distribute, sublicense,
- * and/or sell copies of the Software, and to permit persons to whom the
- * Software is furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
- * DEALINGS IN THE SOFTWARE.
- */
 
 class DisplayTitleHooks {
 
@@ -55,23 +34,24 @@ class DisplayTitleHooks {
 	}
 
 	/**
-	 * Implements LinkBegin hook.
-	 * See https://www.mediawiki.org/wiki/Manual:Hooks/LinkBegin
-	 * Handle links. Implements LinkBegin hook of Linker class.
+	 * Implements HtmlPageLinkRendererBegin hook.
+	 * See https://www.mediawiki.org/wiki/Manual:Hooks/HtmlPageLinkRendererBegin
+	 * Handle links. Implements HtmlPageLinkRendererBegin hook of LinkRenderer class.
 	 *
-	 * @since 1.0
-	 * @param string $dummy no longer used
-	 * @param Title $target the Title object that the link is pointing to
-	 * @param string &$html the HTML of the link text
-	 * @param array &$customAttribs HTML attributes
-	 * @param string &$query query string
-	 * @param array &$options options
+	 * @since 1.4
+	 * @param LinkRenderer $linkRenderer the LinkRenderer object
+	 * @param LinkTarget $target the LinkTarget that the link is pointing to
+	 * @param string|HtmlArmor &$text the contents that the <a> tag should have
+	 * @param array &$extraAttribs the HTML attributes that the <a> tag should have
+	 * @param string &$query the query string to add to the generated URL
 	 * @param string &$ret the value to return if the hook returns false
 	 * @return bool continue checking hooks
 	 */
-	public static function onLinkBegin( $dummy, Title $target, &$html,
-		&$customAttribs, &$query, &$options, &$ret ) {
-		return self::handleLink( $target, $html );
+	public static function onHtmlPageLinkRendererBegin(
+		MediaWiki\Linker\LinkRenderer $linkRenderer,
+		MediaWiki\Linker\LinkTarget $target, &$text, &$extraAttribs, &$query,
+		&$ret ) {
+		return self::handleLink( $target, $text );
 	}
 
 	/**

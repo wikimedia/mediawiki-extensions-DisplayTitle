@@ -8,8 +8,7 @@
  * @since 1.2
  * @author Tobias Oetterer < oetterer@uni-paderborn.de >
  */
-class DisplayTitleLuaLibrary extends Scribunto_LuaLibraryBase
-{
+class DisplayTitleLuaLibrary extends Scribunto_LuaLibraryBase {
 	/**
 	 * Called to register the library.
 	 *
@@ -20,22 +19,20 @@ class DisplayTitleLuaLibrary extends Scribunto_LuaLibraryBase
 	 * @return array Lua package
 	 */
 	public function register() {
+		$lib = [
+			'get'   => [ $this, 'getDisplayTitle' ],
+			'set'   => [ $this, 'setDisplayTitle' ],
+		];
 
-		$lib = array(
-			'get'   => array( $this, 'getDisplayTitle' ),
-			'set'   => array( $this, 'setDisplayTitle' ),
-		);
-
-		return $this->getEngine()->registerInterface( __DIR__ . '/' . 'displaytitle.lua',	$lib, array() );
+		return $this->getEngine()->registerInterface( __DIR__ . '/' . 'displaytitle.lua',	$lib, [] );
 	}
-
 
 	/**
 	 * Returns the display title for a given page.
 	 *
 	 * Mirrors the functionality of parser function #getdisplaytitle, using the same code base.
 	 * @uses \DisplayTitleHooks::getdisplaytitleParserFunction, \DisplayTitleLuaLibrary::toLua
-	 * @param string $pageName  the name of the page, the display title should be received for
+	 * @param string $pageName the name of the page, the display title should be received for
 	 * @return string[]
 	 */
 	public function getDisplayTitle( $pageName ) {
@@ -45,10 +42,9 @@ class DisplayTitleLuaLibrary extends Scribunto_LuaLibraryBase
 				$pageName
 			) );
 		} else {
-			return array( '' );
+			return [ '' ];
 		}
 	}
-
 
 	/**
 	 * Sets the display title for the current page.
@@ -65,10 +61,9 @@ class DisplayTitleLuaLibrary extends Scribunto_LuaLibraryBase
 				$newDisplayTitle
 			) );
 		} else {
-			return array( '' );
+			return [ '' ];
 		}
 	}
-
 
 	/**
 	 * This takes any value and makes sure, that it can be used inside lua.
@@ -79,11 +74,10 @@ class DisplayTitleLuaLibrary extends Scribunto_LuaLibraryBase
 	 * @return mixed
 	 */
 	private function convertToLuaValue( $valueToConvert ) {
-
 		$type = $this->getLuaType( $valueToConvert );
 		if ( $type == 'nil'
-			or $type == 'function'
-			or preg_match('/^PHP .*/', $valueToConvert)
+			|| $type == 'function'
+			|| preg_match( '/^PHP .*/', $valueToConvert )
 		) {
 			return null;
 		}
@@ -97,7 +91,6 @@ class DisplayTitleLuaLibrary extends Scribunto_LuaLibraryBase
 		return $valueToConvert;
 	}
 
-
 	/**
 	 * This makes sure that you can return any given value directly to lua.
 	 * Does all your type checking and conversion for you. Also wraps in 'array()'.
@@ -105,7 +98,6 @@ class DisplayTitleLuaLibrary extends Scribunto_LuaLibraryBase
 	 * @return array
 	 */
 	private function toLua( $val ) {
-
-		return array( $this->convertToLuaValue($val) );
+		return [ $this->convertToLuaValue( $val ) ];
 	}
 }
