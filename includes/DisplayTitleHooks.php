@@ -82,12 +82,17 @@ class DisplayTitleHooks {
 	 *
 	 * @since 1.3
 	 * @param Title $target the Title object that the link is pointing to
-	 * @param string &$html the HTML of the link text
+	 * @param string|HtmlArmor &$html the HTML of the link text
 	 * @return bool continue checking hooks
 	 */
 	private static function handleLink( Title $target, &$html ) {
-		if ( isset( $html ) && is_string( $html ) ) {
-			$title = Title::newFromText( $html );
+		if ( isset( $html ) ) {
+			$title = null;
+			if ( is_string( $html ) ) {
+				$title = Title::newFromText( $html );
+			} else if ( get_class( $html ) == 'HtmlArmor' ) {
+				$title = Title::newFromText( HtmlArmor::getHtml( $html ) );
+			}
 			if ( !is_null( $title ) &&
 				$title->getText() === $target->getText() &&
 				( $title->getSubjectNsText() === $target->getSubjectNsText() ||
