@@ -34,9 +34,30 @@ class DisplayTitleHooks {
 	}
 
 	/**
+	 * Implements PersonalUrls hook.
+	 * See https://www.mediawiki.org/wiki/Manual:Hooks/PersonalUrls
+	 * Handle links. Implements HtmlPageLinkRendererBegin hook of LinkRenderer class.
+	 *
+	 * @since 1.5
+	 * @param array &$personal_urls the array of URLs set up so far
+	 * @param Title $title the Title object of the current article
+	 * @param SkinTemplate $skin SkinTemplate object providing context
+	 */
+	public static function onPersonalUrls( array &$personal_urls, Title $title,
+		SkinTemplate $skin ) {
+		if ( $skin->getUser()->isLoggedIn() &&
+			isset( $personal_urls['userpage'] ) ) {
+			$pagename = $personal_urls['userpage']['text'];
+			$title = $skin->getUser()->getUserPage();
+			self::getDisplayTitle( $title, $pagename );
+			$personal_urls['userpage']['text'] = $pagename;
+		}
+	}
+
+	/**
 	 * Implements HtmlPageLinkRendererBegin hook.
 	 * See https://www.mediawiki.org/wiki/Manual:Hooks/HtmlPageLinkRendererBegin
-	 * Handle links. Implements HtmlPageLinkRendererBegin hook of LinkRenderer class.
+	 * Handle links to other pages.
 	 *
 	 * @since 1.4
 	 * @param LinkRenderer $linkRenderer the LinkRenderer object
@@ -90,7 +111,7 @@ class DisplayTitleHooks {
 			$title = null;
 			if ( is_string( $html ) ) {
 				$title = Title::newFromText( $html );
-			} else if ( get_class( $html ) == 'HtmlArmor' ) {
+			} elseif ( get_class( $html ) == 'HtmlArmor' ) {
 				$title = Title::newFromText( HtmlArmor::getHtml( $html ) );
 			}
 			if ( !is_null( $title ) &&

@@ -1,6 +1,6 @@
 {
 	"name": "DisplayTitle",
-	"version": "1.4",
+	"version": "1.5",
 	"author": [
 		"[https://www.mediawiki.org/wiki/User:Cindy.cicalese Cindy Cicalese]",
 		"[https://www.semantic-mediawiki.org/wiki/User:Oetterer Tobias Oetterer]"
@@ -25,6 +25,7 @@
 		"ParserFirstCallInit": "DisplayTitleHooks::onParserFirstCallInit",
 		"ParserBeforeStrip": "DisplayTitleHooks::onParserBeforeStrip",
 		"BeforePageDisplay": "DisplayTitleHooks::onBeforePageDisplay",
+		"PersonalUrls": "DisplayTitleHooks::onPersonalUrls",
 		"HtmlPageLinkRendererBegin": "DisplayTitleHooks::onHtmlPageLinkRendererBegin",
 		"ScribuntoExternalLibraries": "DisplayTitleHooks::onScribuntoExternalLibraries",
 		"SelfLinkBegin": "DisplayTitleHooks::onSelfLinkBegin"
