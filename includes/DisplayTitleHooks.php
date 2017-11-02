@@ -1,5 +1,8 @@
 <?php
 
+use MediaWiki\Linker\LinkRenderer;
+use MediaWiki\Linker\LinkTarget;
+
 class DisplayTitleHooks {
 
 	/**
@@ -69,10 +72,10 @@ class DisplayTitleHooks {
 	 * @return bool continue checking hooks
 	 */
 	public static function onHtmlPageLinkRendererBegin(
-		MediaWiki\Linker\LinkRenderer $linkRenderer,
-		MediaWiki\Linker\LinkTarget $target, &$text, &$extraAttribs, &$query,
-		&$ret ) {
-		return self::handleLink( $target, $text );
+		LinkRenderer $linkRenderer, LinkTarget $target, &$text, &$extraAttribs,
+		&$query, &$ret ) {
+		$title = Title::newFromLinkTarget( $target );
+		return self::handleLink( $title, $text );
 	}
 
 	/**
