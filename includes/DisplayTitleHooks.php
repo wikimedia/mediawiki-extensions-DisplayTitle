@@ -112,16 +112,26 @@ class DisplayTitleHooks {
 	private static function handleLink( Title $target, &$html ) {
 		if ( isset( $html ) ) {
 			$title = null;
+			$text = null;
 			if ( is_string( $html ) ) {
-				$title = Title::newFromText( $html );
+				$text = $html;
 			} elseif ( get_class( $html ) == 'HtmlArmor' ) {
-				$title = Title::newFromText( HtmlArmor::getHtml( $html ) );
+				$text = HtmlArmor::getHtml( $html );
 			}
-			if ( !is_null( $title ) &&
-				$title->getText() === $target->getText() &&
-				( $title->getSubjectNsText() === $target->getSubjectNsText() ||
-				$title->getSubjectNsText() === '' ) ) {
-				self::getDisplayTitle( $target, $html, true );
+			if ( $text !== null ) {
+				$title = Title::newFromText( $text );
+				if ( !is_null( $title ) ) {
+					if ( $target->getSubjectNsText() === '' ) {
+						if ( $text === $target->getText() ) {
+							self::getDisplayTitle( $target, $html, true );
+						}
+					} else {
+						if ( $title->getText() === $target->getText() &&
+							$title->getSubjectNsText() === $target->getSubjectNsText() ) {
+							self::getDisplayTitle( $target, $html, true );
+						}
+					}
+				}
 			}
 		} else {
 			self::getDisplayTitle( $target, $html, true );
@@ -148,6 +158,8 @@ class DisplayTitleHooks {
 			$found = self::getDisplayTitle( $title, $displaytitle );
 		} elseif ( $title->getSubjectPage()->exists() ) {
 			$found = self::getDisplayTitle( $title->getSubjectPage(), $displaytitle );
+		} else {
+			$found = false;
 		}
 		if ( $found ) {
 			$subtitle = $title->getPrefixedText();
