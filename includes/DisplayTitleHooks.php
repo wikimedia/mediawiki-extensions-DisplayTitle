@@ -121,10 +121,10 @@ class DisplayTitleHooks {
 				$title->getText() === $target->getText() &&
 				( $title->getSubjectNsText() === $target->getSubjectNsText() ||
 				$title->getSubjectNsText() === '' ) ) {
-				self::getDisplayTitle( $target, $html );
+				self::getDisplayTitle( $target, $html, true );
 			}
 		} else {
-			self::getDisplayTitle( $target, $html );
+			self::getDisplayTitle( $target, $html, true );
 		}
 		return true;
 	}
@@ -208,10 +208,12 @@ class DisplayTitleHooks {
 	 * @since 1.0
 	 * @param Title $title the Title object for the page
 	 * @param string &$displaytitle to return the display title, if set
+	 * @param boolean $wrap whether to wrap result in HtmlArmor
 	 * @return boolean true if the page has a displaytitle page property that is
 	 * different from the prefixed page name, false otherwise
 	 */
-	private static function getDisplayTitle( Title $title, &$displaytitle ) {
+	private static function getDisplayTitle( Title $title, &$displaytitle,
+		$wrap = false ) {
 		$pagetitle = $title->getPrefixedText();
 		// remove fragment
 		$title = Title::newFromText( $pagetitle );
@@ -223,6 +225,9 @@ class DisplayTitleHooks {
 				if ( trim( str_replace( '&#160;', '', strip_tags( $value ) ) ) !== '' &&
 					$value !== $pagetitle ) {
 					$displaytitle = $value;
+					if ( $wrap ) {
+						$displaytitle = new HtmlArmor( $displaytitle );
+					}
 					return true;
 				}
 			}
