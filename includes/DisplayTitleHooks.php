@@ -226,23 +226,33 @@ class DisplayTitleHooks {
 	 */
 	private static function getDisplayTitle( Title $title, &$displaytitle,
 		$wrap = false ) {
-		$pagetitle = $title->getPrefixedText();
-		// remove fragment
-		$title = Title::newFromText( $pagetitle );
-		if ( $title instanceof Title ) {
-			$values = PageProps::getInstance()->getProperties( $title, 'displaytitle' );
-			$id = $title->getArticleID();
-			if ( array_key_exists( $id, $values ) ) {
-				$value = $values[$id];
-				if ( trim( str_replace( '&#160;', '', strip_tags( $value ) ) ) !== '' &&
-					$value !== $pagetitle ) {
-					$displaytitle = $value;
-					if ( $wrap ) {
-						$displaytitle = new HtmlArmor( $displaytitle );
-					}
-					return true;
+		$title = $title->createFragmentTarget('');
+		$originalPageName = $title->getPrefixedText();
+		$wikipage = new WikiPage( $title );
+		$redirect = false;
+		$redirectTarget = $wikipage->getRedirectTarget();
+		if ( !is_null( $redirectTarget ) ) {
+			$redirect = true;
+			$title = $redirectTarget;
+		}
+		$id = $title->getArticleID();
+		$values = PageProps::getInstance()->getProperties( $title, 'displaytitle' );
+		if ( array_key_exists( $id, $values ) ) {
+			$value = $values[$id];
+			if ( trim( str_replace( '&#160;', '', strip_tags( $value ) ) ) !== '' &&
+				$value !== $originalPageName ) {
+				$displaytitle = $value;
+				if ( $wrap ) {
+					$displaytitle = new HtmlArmor( $displaytitle );
 				}
+				return true;
 			}
+		} else if ( $redirect ) {
+			$displaytitle = $title->getPrefixedText();
+			if ( $wrap ) {
+				$displaytitle = new HtmlArmor( $displaytitle );
+			}
+			return true;
 		}
 		return false;
 	}
