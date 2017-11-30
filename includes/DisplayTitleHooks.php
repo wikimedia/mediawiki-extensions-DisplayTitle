@@ -226,7 +226,7 @@ class DisplayTitleHooks {
 	 */
 	private static function getDisplayTitle( Title $title, &$displaytitle,
 		$wrap = false ) {
-		$title = $title->createFragmentTarget('');
+		$title = $title->createFragmentTarget( '' );
 		$originalPageName = $title->getPrefixedText();
 		$wikipage = new WikiPage( $title );
 		$redirect = false;
@@ -247,7 +247,7 @@ class DisplayTitleHooks {
 				}
 				return true;
 			}
-		} else if ( $redirect ) {
+		} elseif ( $redirect ) {
 			$displaytitle = $title->getPrefixedText();
 			if ( $wrap ) {
 				$displaytitle = new HtmlArmor( $displaytitle );
