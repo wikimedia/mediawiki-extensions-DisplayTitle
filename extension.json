@@ -1,6 +1,6 @@
 {
 	"name": "DisplayTitle",
-	"version": "1.5.3",
+	"version": "2.0.0",
 	"author": [
 		"[https://www.mediawiki.org/wiki/User:Cindy.cicalese Cindy Cicalese]",
 		"[https://www.semantic-mediawiki.org/wiki/User:Oetterer Tobias Oetterer]"
@@ -31,7 +31,9 @@
 		"SelfLinkBegin": "DisplayTitleHooks::onSelfLinkBegin"
 	},
 	"config": {
-		"DisplayTitleHideSubtitle": false
+		"DisplayTitleHideSubtitle": {
+			"value": false
+		}
 	},
-	"manifest_version": 1
+	"manifest_version": 2
 }
