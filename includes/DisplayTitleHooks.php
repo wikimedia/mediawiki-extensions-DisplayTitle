@@ -111,7 +111,7 @@ class DisplayTitleHooks {
 			$text = null;
 			if ( is_string( $html ) ) {
 				$text = $html;
-			} elseif ( is_integer( $html ) ) {
+			} elseif ( is_int( $html ) ) {
 				$text = (string)$html;
 			} elseif ( $html instanceof HtmlArmor ) {
 				$text = HtmlArmor::getHtml( $html );
