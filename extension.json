@@ -9,6 +9,9 @@
 	"descriptionmsg": "displaytitle-desc",
 	"type": "parserhook",
 	"license-name": "MIT",
+	"requires": {
+		"MediaWiki": ">= 1.29.0"
+	},
 	"MessagesDirs": {
 		"DisplayTitle": [
 			"i18n"
