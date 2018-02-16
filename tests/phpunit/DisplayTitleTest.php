@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @covers DisplayTitleHooks
+ */
 class DisplayTitleTest extends MediaWikiTestCase {
 
 	protected function setUp() {
