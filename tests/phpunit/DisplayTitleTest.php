@@ -27,7 +27,7 @@ class DisplayTitleTest extends MediaWikiTestCase {
 	}
 
 	/**
-	 * @dataProvider testCorrectRetrievalProvider
+	 * @dataProvider provideCorrectRetrievalProvider
 	 */
 	public function testCorrectRetrieval( $p1Title, $p1Display, $p2Title, $p2Text, $p2HtmlPattern ) {
 		// First page has a custom display title.
@@ -48,7 +48,7 @@ class DisplayTitleTest extends MediaWikiTestCase {
 		);
 	}
 
-	public function testCorrectRetrievalProvider() {
+	public function provideCorrectRetrievalProvider() {
 		return [
 			[
 				'p1Title' => 'FirstPage',
