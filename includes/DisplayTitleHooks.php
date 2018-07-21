@@ -124,7 +124,9 @@ class DisplayTitleHooks {
 							self::getDisplayTitle( $target, $html, $wrap );
 						}
 					} else {
-						if ( $title->getText() === $target->getText() &&
+						$pos = strpos( $text, ':' );
+						if ( $pos && strlen( $text ) > $pos + 1 &&
+							substr( $text, $pos + 1 ) === $target->getText() &&
 							$title->getSubjectNsText() === $target->getSubjectNsText() ) {
 							self::getDisplayTitle( $target, $html, $wrap );
 						}
