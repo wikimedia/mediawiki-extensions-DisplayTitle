@@ -43,7 +43,7 @@ class DisplayTitleTest extends MediaWikiTestCase {
 		$parserOptions = new ParserOptions( $this->getTestUser()->getUser() );
 		$parserOptions->setRemoveComments( true );
 		$this->assertRegExp(
-			'|.*'.$p2HtmlPattern.'.*|',
+			'|.*' . $p2HtmlPattern . '.*|',
 			$secondPage->getContent()->getParserOutput( $secondPageTitle, null, $parserOptions )->getText()
 		);
 	}
