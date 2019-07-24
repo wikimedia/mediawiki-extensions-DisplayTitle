@@ -182,7 +182,8 @@ class DisplayTitleHooks {
 	public static function onParserBeforeStrip( Parser &$parser, &$text,
 		&$strip_state ) {
 		$title = $parser->getTitle();
-		if ( $title->isTalkPage() && $title->getSubjectPage()->exists() ) {
+		if ( !is_null( $title ) && $title->isTalkPage() &&
+			$title->getSubjectPage()->exists() ) {
 			$found = self::getDisplayTitle( $title->getSubjectPage(), $displaytitle );
 			if ( $found ) {
 				$displaytitle = wfMessage( 'displaytitle-talkpagetitle',
