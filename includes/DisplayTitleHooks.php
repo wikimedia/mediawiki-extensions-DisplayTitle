@@ -106,6 +106,7 @@ class DisplayTitleHooks {
 	 * @param boolean $wrap whether to wrap result in HtmlArmor
 	 */
 	private static function handleLink( Title $target, &$html, $wrap ) {
+		$customized = false;
 		if ( isset( $html ) ) {
 			$title = null;
 			$text = null;
@@ -116,24 +117,11 @@ class DisplayTitleHooks {
 			} elseif ( $html instanceof HtmlArmor ) {
 				$text = HtmlArmor::getHtml( $html );
 			}
-			if ( !is_null( $text ) ) {
-				$title = Title::newFromText( $text );
-				if ( !is_null( $title ) ) {
-					if ( $target->getSubjectNsText() === '' ) {
-						if ( $text === $target->getText() ) {
-							self::getDisplayTitle( $target, $html, $wrap );
-						}
-					} else {
-						$pos = strpos( $text, ':' );
-						if ( $pos && strlen( $text ) > $pos + 1 &&
-							substr( $text, $pos + 1 ) === $target->getText() &&
-							$title->getSubjectNsText() === $target->getSubjectNsText() ) {
-							self::getDisplayTitle( $target, $html, $wrap );
-						}
-					}
-				}
-			}
-		} else {
+			$customized = !is_null( $text )
+				&& $text != $target->getPrefixedText()
+				&& $text != $target->getText();
+		}
+		if ( !$customized ) {
 			self::getDisplayTitle( $target, $html, $wrap );
 		}
 	}

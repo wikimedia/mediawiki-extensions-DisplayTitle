@@ -29,7 +29,7 @@ class DisplayTitleTest extends MediaWikiTestCase {
 			$testPage['selfLink'] ? $testPage['name'] : 'Test Page', $pageName,
 			$linkText );
 
-		$this->assertEquals( $expectedHtml, $actualHtml, $testName );
+		$this->assertContains( $expectedHtml, $actualHtml, $testName );
 	}
 
 	/**
@@ -75,8 +75,7 @@ class DisplayTitleTest extends MediaWikiTestCase {
 				}
 			}
 			$html = <<<EOT
-<div class="mw-parser-output"><p><a class="mw-selflink selflink">$linkText</a>
-</p></div>
+<a class="mw-selflink selflink">$linkText</a>
 EOT;
 		} else {
 			$isRedirect = !is_null( $testPages[0]['redirectName'] );
@@ -84,7 +83,10 @@ EOT;
 			$url = $title->getLocalURL();
 			if ( is_null( $linkText ) || $linkText === $name ) {
 				if ( $pageName === $this->lcfirstPageName( $name ) &&
-					is_null( $linkText ) ) {
+					is_null( $linkText ) && !$this->isCategory( $pageName ) ) {
+						// Override display title if first leter is lowercase
+						// unless its a category, because categories correct
+						// their cases before they make a linkrender request.
 						$linkText = $pageName;
 				} else {
 					if ( $isRedirect ) {
@@ -98,6 +100,10 @@ EOT;
 						} else {
 							$linkText = $name;
 						}
+						if ( $this->isCategory( $pageName ) ) {
+							// Category links are not namespace prefixed
+							$linkText = substr( $linkText, strlen( 'Category:' ) );
+						}
 					} else {
 						$linkText = $displaytitle;
 					}
@@ -109,8 +115,7 @@ EOT;
 				$redirectClass = '';
 			}
 			$html = <<<EOT
-<div class="mw-parser-output"><p><a href="$url"$redirectClass title="$name">$linkText</a>
-</p></div>
+<a href="$url"$redirectClass title="$name">$linkText</a>
 EOT;
 		}
 		return $html;
@@ -129,16 +134,31 @@ EOT;
 		} else {
 			$wikitext .= $pageName;
 		}
-		if ( !is_null( $linkText ) ) {
+		if ( !is_null( $linkText ) && !$this->isCategory( $pageName ) ) {
 			$wikitext .= '|' . $linkText;
 		}
 		$wikitext .= ']]';
-		$content = new WikitextContent( $wikitext );
-		$parserOptions = new ParserOptions( $this->getTestUser()->getUser() );
-		$parserOptions->setRemoveComments( true );
 		$title = Title::newFromText( $testPageName );
-		$parserOutput = $content->getParserOutput( $title, null, $parserOptions );
-		$html = $parserOutput->getText();
+		if ( !$this->isCategory( $pageName ) ) {
+			// get html for rendered link
+			$content = new WikitextContent( $wikitext );
+			$parserOptions = new ParserOptions( $this->getTestUser()->getUser() );
+			$parserOptions->setRemoveComments( true );
+			$parserOutput = $content->getParserOutput( $title, null, $parserOptions );
+			$html = $parserOutput->getText();
+		} else {
+			// get html for category link
+			$page = WikiPage::factory( $title );
+			$context = new RequestContext();
+			$context->setTitle( $title );
+			$context->setUser( $this->getTestUser()->getUser() );
+			$output = $context->getOutput();
+			$output->addWikiTextAsContent( $wikitext );
+			$links = $output->getCategoryLinks();
+			// there is only one link in these cases, but it's wrapped up in a 2d array
+			$html = array_values( array_values( $links )[0] )[0];
+		}
+
 		return $html;
 	}
 
@@ -204,6 +224,20 @@ EOT;
 			'selfLink' => false
 		];
 
+		$categoryPageWithoutDisplaytitle = [
+			'name' => 'Category:Category without displaytitle',
+			'redirectName' => null,
+			'displaytitle' => null,
+			'selfLink' => false
+		];
+
+		$categoryPageWithDisplaytitle = [
+			'name' => 'Category:Category with displaytitle',
+			'redirectName' => null,
+			'displaytitle' => 'My displaytitle',
+			'selfLink' => false
+		];
+
 		$this->addTests( [
 			$pageWithoutDisplaytitle
 			] );
@@ -230,8 +264,18 @@ EOT;
 		$this->addTests( [
 			$userPageWithDisplaytitle
 			] );
+		$this->addTests( [
+			$categoryPageWithoutDisplaytitle
+			] );
+		$this->addTests( [
+			$categoryPageWithDisplaytitle
+			] );
 
 		return $this->tests;
+	}
+
+	private function isCategory( $pageName ) {
+		return substr( $pageName, 0, strlen( 'Category:' ) ) === 'Category:';
 	}
 
 	private function lcfirstPageName( $name ) {
@@ -265,47 +309,50 @@ EOT;
 		$test['testPages'] = $testPages;
 		$this->tests[] = $test;
 
-		$test = [];
-		$test['testName'] = "Link to $name, page name link text";
-		$test['pageName'] = $name;
-		$test['linkText'] = $name;
-		$test['testPages'] = $testPages;
-		$this->tests[] = $test;
+		// Categories use sorting keys instead of link text
+		if ( !$this->isCategory( $name ) ) {
+			$test = [];
+			$test['testName'] = "Link to $name, page name link text";
+			$test['pageName'] = $name;
+			$test['linkText'] = $name;
+			$test['testPages'] = $testPages;
+			$this->tests[] = $test;
 
-		$test = [];
-		$test['testName'] = "Link to $name, lcfirst page name, page name link text";
-		$test['pageName'] = $lcname;
-		$test['linkText'] = $name;
-		$test['testPages'] = $testPages;
-		$this->tests[] = $test;
+			$test = [];
+			$test['testName'] = "Link to $name, lcfirst page name, page name link text";
+			$test['pageName'] = $lcname;
+			$test['linkText'] = $name;
+			$test['testPages'] = $testPages;
+			$this->tests[] = $test;
 
-		$test = [];
-		$test['testName'] = "Link to $name, lcfirst page name link text";
-		$test['pageName'] = $name;
-		$test['linkText'] = $lcname;
-		$test['testPages'] = $testPages;
-		$this->tests[] = $test;
+			$test = [];
+			$test['testName'] = "Link to $name, lcfirst page name link text";
+			$test['pageName'] = $name;
+			$test['linkText'] = $lcname;
+			$test['testPages'] = $testPages;
+			$this->tests[] = $test;
 
-		$test = [];
-		$test['testName'] =
-			"Link to $name, lcfirst page name, lcfirst page name link text";
-		$test['pageName'] = $lcname;
-		$test['linkText'] = $lcname;
-		$test['testPages'] = $testPages;
-		$this->tests[] = $test;
+			$test = [];
+			$test['testName'] =
+				"Link to $name, lcfirst page name, lcfirst page name link text";
+			$test['pageName'] = $lcname;
+			$test['linkText'] = $lcname;
+			$test['testPages'] = $testPages;
+			$this->tests[] = $test;
 
-		$test = [];
-		$test['testName'] = "Link to $name, link text";
-		$test['pageName'] = $name;
-		$test['linkText'] = 'abc';
-		$test['testPages'] = $testPages;
-		$this->tests[] = $test;
+			$test = [];
+			$test['testName'] = "Link to $name, link text";
+			$test['pageName'] = $name;
+			$test['linkText'] = 'abc';
+			$test['testPages'] = $testPages;
+			$this->tests[] = $test;
 
-		$test = [];
-		$test['testName'] = "Link to $name, lcfirst page name, link text";
-		$test['pageName'] = $lcname;
-		$test['linkText'] = 'abc';
-		$test['testPages'] = $testPages;
-		$this->tests[] = $test;
+			$test = [];
+			$test['testName'] = "Link to $name, lcfirst page name, link text";
+			$test['pageName'] = $lcname;
+			$test['linkText'] = 'abc';
+			$test['testPages'] = $testPages;
+			$this->tests[] = $test;
+		}
 	}
 }
