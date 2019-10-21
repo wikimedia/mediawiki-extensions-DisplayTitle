@@ -7,6 +7,12 @@
  */
 class DisplayTitleTest extends MediaWikiTestCase {
 
+	public function setUp() {
+		parent::setUp();
+		$this->setMwGlobals( 'wgAllowDisplayTitle', true );
+		$this->setMwGlobals( 'wgRestrictDisplayTitle', false );
+	}
+
 	/**
 	 * @dataProvider provideTestData
 	 */
@@ -165,9 +171,6 @@ EOT;
 	public $tests = [];
 
 	public function provideTestData() {
-		$this->setMwGlobals( 'wgAllowDisplayTitle', true );
-		$this->setMwGlobals( 'wgRestrictDisplayTitle', false );
-
 		$pageWithoutDisplaytitle = [
 			'name' => 'Page without displaytitle',
 			'redirectName' => null,
