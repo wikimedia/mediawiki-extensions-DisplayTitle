@@ -49,11 +49,11 @@ class DisplayTitleTest extends MediaWikiTestCase {
 	private function createTestPage( $name, $redirectName, $displaytitle ) {
 		$title = Title::newFromText( $name );
 		$page = new WikiPage( $title );
-		if ( !is_null( $redirectName ) ) {
+		if ( $redirectName !== null ) {
 			$wikitext = '#REDIRECT [[' . $redirectName . ']]';
 		} else {
 			$wikitext = 'This is a test';
-			if ( !is_null( $displaytitle ) ) {
+			if ( $displaytitle !== null ) {
 				$wikitext .= "{{DISPLAYTITLE:$displaytitle}}";
 			}
 		}
@@ -70,13 +70,13 @@ class DisplayTitleTest extends MediaWikiTestCase {
 		$name = $testPages[0]['name'];
 		if ( $testPages[0]['selfLink'] ) {
 			$displaytitle = $testPages[0]['displaytitle'];
-			if ( is_null( $linkText ) || $linkText === $name ) {
+			if ( $linkText === null || $linkText === $name ) {
 				if ( $pageName === $this->lcfirstPageName( $name ) &&
-					is_null( $linkText ) ) {
+					$linkText === null ) {
 					$linkText = $pageName;
-				} elseif ( !is_null( $displaytitle ) ) {
+				} elseif ( $displaytitle !== null ) {
 					$linkText = $displaytitle;
-				} elseif ( is_null( $linkText ) ) {
+				} elseif ( $linkText === null ) {
 					$linkText = $name;
 				}
 			}
@@ -84,12 +84,12 @@ class DisplayTitleTest extends MediaWikiTestCase {
 <a class="mw-selflink selflink">$linkText</a>
 EOT;
 		} else {
-			$isRedirect = !is_null( $testPages[0]['redirectName'] );
+			$isRedirect = $testPages[0]['redirectName'] !== null;
 			$title = Title::newFromText( $name );
 			$url = $title->getLocalURL();
-			if ( is_null( $linkText ) || $linkText === $name ) {
+			if ( $linkText === null || $linkText === $name ) {
 				if ( $pageName === $this->lcfirstPageName( $name ) &&
-					is_null( $linkText ) && !$this->isCategory( $pageName ) ) {
+					$linkText === null && !$this->isCategory( $pageName ) ) {
 						// Override display title if first leter is lowercase
 						// unless its a category, because categories correct
 						// their cases before they make a linkrender request.
@@ -100,7 +100,7 @@ EOT;
 					} else {
 						$displaytitle = $testPages[0]['displaytitle'];
 					}
-					if ( is_null( $displaytitle ) ) {
+					if ( $displaytitle === null ) {
 						if ( $isRedirect ) {
 							$linkText = $testPages[1]['name'];
 						} else {
@@ -135,12 +135,12 @@ EOT;
 	 */
 	private function getActualHtml( $testPageName, $pageName, $linkText ) {
 		$wikitext = '[[';
-		if ( is_null( $pageName ) ) {
+		if ( $pageName === null ) {
 			$wikitext .= $testPageName;
 		} else {
 			$wikitext .= $pageName;
 		}
-		if ( !is_null( $linkText ) && !$this->isCategory( $pageName ) ) {
+		if ( $linkText !== null && !$this->isCategory( $pageName ) ) {
 			$wikitext .= '|' . $linkText;
 		}
 		$wikitext .= ']]';

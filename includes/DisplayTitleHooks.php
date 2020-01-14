@@ -28,7 +28,7 @@ class DisplayTitleHooks {
 	public static function getdisplaytitleParserFunction( Parser $parser,
 		$pagename ) {
 		$title = Title::newFromText( $pagename );
-		if ( !is_null( $title ) ) {
+		if ( $title !== null ) {
 			self::getDisplayTitle( $title, $pagename );
 		}
 		return $pagename;
@@ -103,7 +103,7 @@ class DisplayTitleHooks {
 	 * @since 1.3
 	 * @param Title $target the Title object that the link is pointing to
 	 * @param string|HtmlArmor &$html the HTML of the link text
-	 * @param boolean $wrap whether to wrap result in HtmlArmor
+	 * @param bool $wrap whether to wrap result in HtmlArmor
 	 */
 	private static function handleLink( Title $target, &$html, $wrap ) {
 		$customized = false;
@@ -117,7 +117,7 @@ class DisplayTitleHooks {
 			} elseif ( $html instanceof HtmlArmor ) {
 				$text = HtmlArmor::getHtml( $html );
 			}
-			$customized = !is_null( $text )
+			$customized = $text !== null
 				&& $text != $target->getPrefixedText()
 				&& $text != $target->getText();
 		}
@@ -170,7 +170,7 @@ class DisplayTitleHooks {
 	public static function onParserBeforeStrip( Parser &$parser, &$text,
 		&$strip_state ) {
 		$title = $parser->getTitle();
-		if ( !is_null( $title ) && $title->isTalkPage() &&
+		if ( $title !== null && $title->isTalkPage() &&
 			$title->getSubjectPage()->exists() ) {
 			$found = self::getDisplayTitle( $title->getSubjectPage(), $displaytitle );
 			if ( $found ) {
@@ -202,8 +202,8 @@ class DisplayTitleHooks {
 	 * @since 1.0
 	 * @param Title $title the Title object for the page
 	 * @param string &$displaytitle to return the display title, if set
-	 * @param boolean $wrap whether to wrap result in HtmlArmor
-	 * @return boolean true if the page has a displaytitle page property that is
+	 * @param bool $wrap whether to wrap result in HtmlArmor
+	 * @return bool true if the page has a displaytitle page property that is
 	 * different from the prefixed page name, false otherwise
 	 */
 	private static function getDisplayTitle( Title $title, &$displaytitle,
@@ -213,7 +213,7 @@ class DisplayTitleHooks {
 		$wikipage = new WikiPage( $title );
 		$redirect = false;
 		$redirectTarget = $wikipage->getRedirectTarget();
-		if ( !is_null( $redirectTarget ) ) {
+		if ( $redirectTarget !== null ) {
 			$redirect = true;
 			$title = $redirectTarget;
 		}

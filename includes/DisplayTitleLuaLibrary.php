@@ -94,7 +94,7 @@ class DisplayTitleLuaLibrary extends Scribunto_LuaLibraryBase {
 	/**
 	 * This makes sure that you can return any given value directly to lua.
 	 * Does all your type checking and conversion for you. Also wraps in 'array()'.
-	 * @param $val
+	 * @param mixed $val
 	 * @return array
 	 */
 	private function toLua( $val ) {
