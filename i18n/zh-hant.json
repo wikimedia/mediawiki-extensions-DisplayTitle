@@ -1,8 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"Liuxinyu970226",
-			"Kly"
+			"Kly",
+			"Liuxinyu970226"
 		]
 	},
 	"displaytitle-desc": "在連結文字、副標題，以及對話頁面標題使用顯示標題頁面屬性，來提供用於查詢顯示標題的解析函式。",

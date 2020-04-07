@@ -1,8 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"Metalhead64",
-			"Kghbln"
+			"Kghbln",
+			"Metalhead64"
 		]
 	},
 	"displaytitle-desc": "Verwendet die Seiteneigenschaft „Anzeigetitel“ zur Anzeige von Linktext, Untertitel sowie Diskussionsseitentitel und stellt eine Parserfunktion zu deren Abfrage bereit",
