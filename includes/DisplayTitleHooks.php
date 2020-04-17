@@ -175,17 +175,17 @@ class DisplayTitleHooks {
 	}
 
 	/**
-	 * Implements ParserBeforeStrip hook.
-	 * See https://www.mediawiki.org/wiki/Manual:Hooks/ParserBeforeStrip
+	 * Implements ParserBeforeInternalParse hook.
+	 * See https://www.mediawiki.org/wiki/Manual:Hooks/ParserBeforeInternalParse
 	 * Handle talk page title.
 	 *
 	 * @since 1.0
-	 * @param Parser &$parser the Parser object
+	 * @param Parser $parser the Parser object
 	 * @param string &$text the text
-	 * @param StripState &$strip_state the strip state
+	 * @param StripState $strip_state the strip state
 	 */
-	public static function onParserBeforeStrip( Parser &$parser, &$text,
-		&$strip_state ) {
+	public static function onParserBeforeInternalParse( Parser $parser, &$text,
+		$strip_state ) {
 		$title = $parser->getTitle();
 		if ( $title !== null && $title->isTalkPage() &&
 			$title->getSubjectPage()->exists() ) {
