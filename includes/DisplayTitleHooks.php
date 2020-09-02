@@ -2,6 +2,7 @@
 
 use MediaWiki\Linker\LinkRenderer;
 use MediaWiki\Linker\LinkTarget;
+use MediaWiki\MediaWikiServices;
 
 class DisplayTitleHooks {
 
@@ -71,6 +72,14 @@ class DisplayTitleHooks {
 	public static function onHtmlPageLinkRendererBegin(
 		LinkRenderer $linkRenderer, LinkTarget $target, &$text, &$extraAttribs,
 		&$query, &$ret ) {
+		// Do not use DisplayTitle if current page is defined in $wgDisplayTitleExcludes
+		$config = MediaWikiServices::getInstance()->getMainConfig();
+		$request = $config->get( 'Request' );
+		$title = $request->getVal( 'title' );
+		if ( in_array( $title, $GLOBALS['wgDisplayTitleExcludes'] ) ) {
+			return;
+		}
+
 		$title = Title::newFromLinkTarget( $target );
 		self::handleLink( $title, $text, true );
 	}
@@ -89,6 +98,14 @@ class DisplayTitleHooks {
 	 */
 	public static function onSelfLinkBegin( Title $nt, &$html, &$trail,
 		&$prefix, &$ret ) {
+		// Do not use DisplayTitle if current page is defined in $wgDisplayTitleExcludes
+		$config = MediaWikiServices::getInstance()->getMainConfig();
+		$request = $config->get( 'Request' );
+		$title = $request->getVal( 'title' );
+		if ( in_array( $title, $GLOBALS['wgDisplayTitleExcludes'] ) ) {
+			return;
+		}
+
 		self::handleLink( $nt, $html, false );
 	}
 
