@@ -111,11 +111,11 @@ class DisplayTitleHooks {
 			$title = null;
 			$text = null;
 			if ( is_string( $html ) ) {
-				$text = $html;
+				$text = str_replace( '_', ' ', $html );
 			} elseif ( is_int( $html ) ) {
 				$text = (string)$html;
 			} elseif ( $html instanceof HtmlArmor ) {
-				$text = HtmlArmor::getHtml( $html );
+				$text = str_replace( '_', ' ', HtmlArmor::getHtml( $html ) );
 			}
 			$customized = $text !== null
 				&& $text != $target->getPrefixedText()
