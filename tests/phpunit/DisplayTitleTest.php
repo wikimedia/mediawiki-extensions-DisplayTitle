@@ -65,6 +65,7 @@ class DisplayTitleTest extends MediaWikiTestCase {
 	 * @param string $pageName The name of the page in the test
 	 * @param string|null $linkText The link text
 	 * @param array $testPages The array of information about the test pages
+	 * @return string
 	 */
 	private function getExpectedHtml( $pageName, $linkText, $testPages ) {
 		$name = $testPages[0]['name'];
@@ -134,6 +135,7 @@ EOT;
 	 * @param string $testPageName The name of the test page
 	 * @param string $pageName The name of the page in the test
 	 * @param string|null $linkText The link text
+	 * @return string
 	 */
 	private function getActualHtml( $testPageName, $pageName, $linkText ) {
 		$wikitext = '[[';
@@ -170,6 +172,7 @@ EOT;
 		return $html;
 	}
 
+	/** @var array[] */
 	public $tests = [];
 
 	public function provideTestData() {
