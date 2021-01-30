@@ -226,6 +226,12 @@ class DisplayTitleHooks {
 	private static function getDisplayTitle( Title $title, &$displaytitle,
 		$wrap = false ) {
 		$title = $title->createFragmentTarget( '' );
+
+		if ( !$title->canExist() ) {
+			// If the Title isn't a valid content page (e.g. Special:UserLogin), just return.
+			return false;
+		}
+
 		$originalPageName = $title->getPrefixedText();
 		$wikipage = new WikiPage( $title );
 		$redirect = false;
