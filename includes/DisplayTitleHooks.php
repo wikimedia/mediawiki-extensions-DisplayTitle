@@ -4,6 +4,17 @@ use MediaWiki\Linker\LinkRenderer;
 use MediaWiki\Linker\LinkTarget;
 use MediaWiki\MediaWikiServices;
 
+use MediaWiki\Logger\LoggerFactory;
+use MediaWiki\MediaWikiServices;
+
+use SMW\ApplicationFactory;
+use SMW\DIProperty;
+use SMW\DIWikiPage;
+use SMWRequestOptions as RequestOptions;
+use SMW\DataValues\MonolingualTextValue;
+use SMW\DataValueFactory;
+
+
 class DisplayTitleHooks {
 
 	/**
@@ -241,6 +252,12 @@ class DisplayTitleHooks {
 			$title = $redirectTarget;
 		}
 		$id = $title->getArticleID();
+
+		// check for rdfs:label
+		if ( self::getLabel( $title, $displaytitle ) ) {
+			return true;
+		}
+
 		$values = PageProps::getInstance()->getProperties( $title, 'displaytitle' );
 		if ( array_key_exists( $id, $values ) ) {
 			$value = $values[$id];
@@ -259,6 +276,35 @@ class DisplayTitleHooks {
 			}
 			return true;
 		}
+		return false;
+	}
+
+	private static function getLabel( Title $title, &$label ) {
+		$store = ApplicationFactory::getInstance()->getStore();
+		$lang = RequestContext::getMain()->getLanguage()->getCode();
+		$prop = DIProperty::newFromUserLabel( 'Rdfs:label' );
+
+		$requestOptions = new RequestOptions();
+		$requestOptions->setLimit( 1 );
+		$propertyValues = $store->getPropertyValues(
+			DIWikiPage::newFromTitle( $title ),
+			$prop,
+			$requestOptions
+		);
+
+		foreach ( $propertyValues as $value ) {
+			$multiValue = DataValueFactory::getInstance()->newDataValueByItem( $value, $prop );
+			if ($multiValue instanceof MonolingualTextValue) {
+				$val = $multiValue->getTextValueByLanguageCode($lang);
+				if ($val != null) {
+					$label = $val;
+					return true;
+				}
+			} else {
+				LoggerFactory::getInstance('DisplayTitle')->error('Invalid rdfs:label value (no monolingual) on page ' . $title->getDBkey());
+			}
+		}
+
 		return false;
 	}
 }
