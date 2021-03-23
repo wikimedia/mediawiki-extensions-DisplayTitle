@@ -134,6 +134,21 @@ class DisplayTitleHooks {
 			} elseif ( $html instanceof HtmlArmor ) {
 				$text = str_replace( '_', ' ', HtmlArmor::getHtml( $html ) );
 			}
+
+			// handle named Semantic MediaWiki subobjects (see T275984)
+			// by removing trailing fragment
+			$fragment = $target->getFragment();
+			if ( $fragment != '' ) {
+				$fragment = '#' . $fragment;
+				$fraglen = strlen( $fragment );
+				if ( strrpos( $text, $fragment ) == strlen( $text ) - $fraglen ) {
+					$text = substr( $text, 0, 0 - $fraglen );
+					if ( $wrap ) {
+						$html = new HtmlArmor( $text );
+					}
+				}
+			}
+
 			$customized = $text !== null
 				&& $text != $target->getPrefixedText()
 				&& $text != $target->getText();
