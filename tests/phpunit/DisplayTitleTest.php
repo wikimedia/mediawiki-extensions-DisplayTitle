@@ -35,7 +35,7 @@ class DisplayTitleTest extends MediaWikiTestCase {
 			$testPage['selfLink'] ? $testPage['name'] : 'Test Page', $pageName,
 			$linkText );
 
-		$this->assertContains( $expectedHtml, $actualHtml, $testName );
+		$this->assertStringContainsString( $expectedHtml, $actualHtml, $testName );
 	}
 
 	/**
@@ -70,7 +70,8 @@ class DisplayTitleTest extends MediaWikiTestCase {
 		$name = $testPages[0]['name'];
 		if ( $testPages[0]['selfLink'] ) {
 			$displaytitle = $testPages[0]['displaytitle'];
-			if ( $linkText === null || $linkText === $name ) {
+			if ( $linkText === null || $linkText === $name ||
+				( $displaytitle !== null && str_replace( '_', ' ', $linkText ) === $name ) ) {
 				if ( $pageName === $this->lcfirstPageName( $name ) &&
 					$linkText === null ) {
 					$linkText = $pageName;
@@ -87,10 +88,11 @@ EOT;
 			$isRedirect = $testPages[0]['redirectName'] !== null;
 			$title = Title::newFromText( $name );
 			$url = $title->getLocalURL();
-			if ( $linkText === null || $linkText === $name ) {
+			if ( $linkText === null || $linkText === $name ||
+				str_replace( '_', ' ', $linkText ) === $name ) {
 				if ( $pageName === $this->lcfirstPageName( $name ) &&
 					$linkText === null && !$this->isCategory( $pageName ) ) {
-						// Override display title if first leter is lowercase
+						// Override display title if first letter is lowercase
 						// unless its a category, because categories correct
 						// their cases before they make a linkrender request.
 						$linkText = $pageName;
@@ -103,12 +105,12 @@ EOT;
 					if ( $displaytitle === null ) {
 						if ( $isRedirect ) {
 							$linkText = $testPages[1]['name'];
-						} else {
+						} elseif ( $linkText === null ) {
 							$linkText = $name;
 						}
 						if ( $this->isCategory( $pageName ) ) {
 							// Category links are not namespace prefixed
-							$linkText = substr( $linkText, strlen( 'Category:' ) );
+							$linkText = substr( $name, strlen( 'Category:' ) );
 						}
 					} else {
 						$linkText = $displaytitle;
@@ -297,6 +299,7 @@ EOT;
 	private function addTests( $testPages ) {
 		$name = $testPages[0]['name'];
 		$lcname = $this->lcfirstPageName( $name );
+		$uname = str_replace( ' ', '_', $name );
 
 		$test = [];
 		$test['testName'] = "Link to $name, no link text";
@@ -318,6 +321,13 @@ EOT;
 			$test['testName'] = "Link to $name, page name link text";
 			$test['pageName'] = $name;
 			$test['linkText'] = $name;
+			$test['testPages'] = $testPages;
+			$this->tests[] = $test;
+
+			$test = [];
+			$test['testName'] = "Link to $name, page name with underscores link text";
+			$test['pageName'] = $name;
+			$test['linkText'] = $uname;
 			$test['testPages'] = $testPages;
 			$this->tests[] = $test;
 
