@@ -37,6 +37,9 @@
 	"config": {
 		"DisplayTitleHideSubtitle": {
 			"value": false
+		},
+		"DisplayTitleExcludes": {
+			"value": []
 		}
 	},
 	"manifest_version": 2
