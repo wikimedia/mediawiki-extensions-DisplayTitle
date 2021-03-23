@@ -193,7 +193,7 @@ class DisplayTitleHooks {
 			if ( $found ) {
 				$displaytitle = wfMessage( 'displaytitle-talkpagetitle',
 					$displaytitle )->plain();
-				$parser->mOutput->setTitleText( $displaytitle );
+				$parser->getOutput()->setTitleText( $displaytitle );
 			}
 		}
 	}
