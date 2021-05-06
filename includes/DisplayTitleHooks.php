@@ -47,7 +47,7 @@ class DisplayTitleHooks {
 	 */
 	public static function onPersonalUrls( array &$personal_urls, Title $title,
 		SkinTemplate $skin ) {
-		if ( $skin->getUser()->isLoggedIn() &&
+		if ( $skin->getUser()->isRegistered() &&
 			isset( $personal_urls['userpage'] ) ) {
 			$pagename = $personal_urls['userpage']['text'];
 			$title = $skin->getUser()->getUserPage();
