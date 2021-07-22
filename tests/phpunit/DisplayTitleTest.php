@@ -7,7 +7,7 @@
  */
 class DisplayTitleTest extends MediaWikiTestCase {
 
-	public function setUp() : void {
+	public function setUp(): void {
 		parent::setUp();
 		$this->setMwGlobals( 'wgAllowDisplayTitle', true );
 		$this->setMwGlobals( 'wgRestrictDisplayTitle', false );
