@@ -138,7 +138,7 @@ class DisplayTitleHooks {
 			// handle named Semantic MediaWiki subobjects (see T275984)
 			// by removing trailing fragment
 			$fragment = $target->getFragment();
-			if ( $fragment != '' ) {
+			if ( $fragment != '' && $target->getNamespace() != NS_CATEGORY ) {
 				$fragment = '#' . $fragment;
 				$fraglen = strlen( $fragment );
 				if ( strrpos( $text, $fragment ) == strlen( $text ) - $fraglen ) {
