@@ -57,7 +57,13 @@ class DisplayTitleTest extends MediaWikiTestCase {
 				$wikitext .= "{{DISPLAYTITLE:$displaytitle}}";
 			}
 		}
-		$page->doEditContent( new WikitextContent( $wikitext ), '' );
+		// $page->doEditContent( new WikitextContent( $wikitext ), '' );
+		$updater = $page->newPageUpdater( $this->getTestSysop()->getUser() );
+		$updater->setContent( 'main', new WikitextContent( $wikitext ) );
+		$updater->saveRevision(
+			CommentStoreComment::newUnsavedComment( 'new test page' ),
+			EDIT_AUTOSUMMARY
+		);
 	}
 
 	/**
