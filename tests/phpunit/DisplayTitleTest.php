@@ -5,7 +5,7 @@
  * @covers DisplayTitleHooks::onSelfLinkBegin
  * @group Database
  */
-class DisplayTitleTest extends MediaWikiTestCase {
+class DisplayTitleTest extends MediaWikiIntegrationTestCase {
 
 	public function setUp(): void {
 		parent::setUp();
