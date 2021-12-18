@@ -125,7 +125,6 @@ class DisplayTitleHooks {
 	private static function handleLink( Title $target, &$html, $wrap ) {
 		$customized = false;
 		if ( isset( $html ) ) {
-			$title = null;
 			$text = null;
 			if ( is_string( $html ) ) {
 				$text = str_replace( '_', ' ', $html );
@@ -135,23 +134,27 @@ class DisplayTitleHooks {
 				$text = str_replace( '_', ' ', HtmlArmor::getHtml( $html ) );
 			}
 
-			// handle named Semantic MediaWiki subobjects (see T275984)
-			// by removing trailing fragment
+			// handle named Semantic MediaWiki subobjects (see T275984) by removing trailing fragment
+			// skip fragment detection on category pages
 			$fragment = $target->getFragment();
-			if ( $fragment != '' && $target->getNamespace() != NS_CATEGORY ) {
-				$fragment = '#' . $fragment;
-				$fraglen = strlen( $fragment );
-				if ( strrpos( $text, $fragment ) === strlen( $text ) - $fraglen ) {
-					$text = substr( $text, 0, 0 - $fraglen );
+			if ( $fragment !== '' && $target->getNamespace() != NS_CATEGORY ) {
+				$parts = explode( '#', $text, 2 );
+				$text_title = $parts[0];
+				$text_fragment = $parts[1] ?? null;
+				if ( $text_title === '' || $text_fragment === null ) {
+					$customized = true;
+				} else {
+					$text = $text_title;
 					if ( $wrap ) {
 						$html = new HtmlArmor( $text );
 					}
+					$customized = $text != $target->getPrefixedText() && $text != $target->getText();
 				}
+			} else {
+				$customized = $text !== null
+					&& $text != $target->getPrefixedText()
+					&& $text != $target->getText();
 			}
-
-			$customized = $text !== null
-				&& $text != $target->getPrefixedText()
-				&& $text != $target->getText();
 		}
 		if ( !$customized ) {
 			self::getDisplayTitle( $target, $html, $wrap );
