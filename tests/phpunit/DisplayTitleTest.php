@@ -18,6 +18,7 @@ class DisplayTitleTest extends MediaWikiTestCase {
 	 */
 	public function testParse( $testName, $pageName, $linkText, $testPages ) {
 		$testPage = $testPages[0];
+		Title::clearCaches();
 
 		for ( end( $testPages ); key( $testPages ) !== null; prev( $testPages ) ) {
 			$page = current( $testPages );
@@ -31,6 +32,7 @@ class DisplayTitleTest extends MediaWikiTestCase {
 
 		$expectedHtml = $this->getExpectedHtml( $pageName, $linkText, $testPages );
 
+		$this->hideDeprecated( 'AbstractContent::getParserOutput' );
 		$actualHtml = $this->getActualHtml(
 			$testPage['selfLink'] ? $testPage['name'] : 'Test Page', $pageName,
 			$linkText );
@@ -57,7 +59,6 @@ class DisplayTitleTest extends MediaWikiTestCase {
 				$wikitext .= "{{DISPLAYTITLE:$displaytitle}}";
 			}
 		}
-		// $page->doEditContent( new WikitextContent( $wikitext ), '' );
 		$updater = $page->newPageUpdater( $this->getTestSysop()->getUser() );
 		$updater->setContent( 'main', new WikitextContent( $wikitext ) );
 		$updater->saveRevision(
@@ -74,64 +75,73 @@ class DisplayTitleTest extends MediaWikiTestCase {
 	 * @return string
 	 */
 	private function getExpectedHtml( $pageName, $linkText, $testPages ) {
-		$name = $testPages[0]['name'];
-		if ( $testPages[0]['selfLink'] ) {
-			$displaytitle = $testPages[0]['displaytitle'];
-			if ( $linkText === null || $linkText === $name ||
-				( $displaytitle !== null && str_replace( '_', ' ', $linkText ) === $name ) ) {
-				if ( $pageName === $this->lcfirstPageName( $name ) &&
-					$linkText === null ) {
-					$linkText = $pageName;
-				} elseif ( $displaytitle !== null ) {
-					$linkText = $displaytitle;
-				} elseif ( $linkText === null ) {
-					$linkText = $name;
+		$parts = explode( '#', $pageName, 2 );
+		$fragment = $parts[1] ?? null;
+		if ( $parts[0] === '' ) {
+			$html = "<a href=\"#$fragment\">#$fragment</a>";
+		} else {
+			$name = $testPages[0]['name'];
+			if ( $testPages[0]['selfLink'] && $fragment === null ) {
+				$displaytitle = $testPages[0]['displaytitle'];
+				if ( $linkText === null || $linkText === $name ||
+					( $displaytitle !== null && str_replace( '_', ' ', $linkText ) === $name ) ) {
+					if ( $pageName === $this->lcfirstPageName( $name ) &&
+						$linkText === null ) {
+						$linkText = $pageName;
+					} elseif ( $displaytitle !== null ) {
+						$linkText = $displaytitle;
+					} elseif ( $linkText === null ) {
+						$linkText = $name;
+					}
 				}
-			}
-			$html = <<<EOT
+				$html = <<<EOT
 <a class="mw-selflink selflink">$linkText</a>
 EOT;
-		} else {
-			$isRedirect = $testPages[0]['redirectName'] !== null;
-			$title = Title::newFromText( $name );
-			$url = $title->getLocalURL();
-			if ( $linkText === null || $linkText === $name ||
-				str_replace( '_', ' ', $linkText ) === $name ) {
-				if ( $pageName === $this->lcfirstPageName( $name ) &&
-					$linkText === null && !$this->isCategory( $pageName ) ) {
+			} else {
+				$isRedirect = $testPages[0]['redirectName'] !== null;
+				$title = Title::newFromText( $name );
+				if ( $fragment ) {
+					$title->setFragment( '#' . $fragment );
+				}
+				$url = $title->getLinkURL();
+				if ( $linkText === null || $linkText === $name ||
+					str_replace( '_', ' ', $linkText ) === $name ) {
+					if ( $pageName === $this->lcfirstPageName( $name ) &&
+						$linkText === null && !$this->isCategory( $pageName ) ) {
 						// Override display title if first letter is lowercase
 						// unless its a category, because categories correct
 						// their cases before they make a linkrender request.
 						$linkText = $pageName;
-				} else {
-					if ( $isRedirect ) {
-						$displaytitle = $testPages[1]['displaytitle'];
 					} else {
-						$displaytitle = $testPages[0]['displaytitle'];
-					}
-					if ( $displaytitle === null ) {
 						if ( $isRedirect ) {
-							$linkText = $testPages[1]['name'];
-						} elseif ( $linkText === null ) {
-							$linkText = $name;
+							$displaytitle = $testPages[1]['displaytitle'];
+						} else {
+							$displaytitle = $testPages[0]['displaytitle'];
 						}
-						if ( $this->isCategory( $pageName ) ) {
-							// Category links are not namespace prefixed
-							$linkText = substr( $name, strlen( 'Category:' ) );
+						if ( $displaytitle === null ) {
+							if ( $isRedirect ) {
+								$linkText = $testPages[1]['name'];
+							} elseif ( $linkText === null ) {
+								$linkText = $name;
+							}
+							if ( $this->isCategory( $pageName ) ) {
+								// Category links are not namespace prefixed
+								$linkText = substr( $name, strlen( 'Category:' ) );
+							}
+						} else {
+							$linkText = $displaytitle;
 						}
-					} else {
-						$linkText = $displaytitle;
 					}
 				}
-			}
-			if ( $isRedirect ) {
-				$redirectClass = ' class="mw-redirect"';
-			} else {
-				$redirectClass = '';
-			}
-			$html = <<<EOT
+				if ( $isRedirect ) {
+					$redirectClass = ' class="mw-redirect"';
+				} else {
+					$redirectClass = '';
+				}
+				$html = <<<EOT
 <a href="$url"$redirectClass title="$name">$linkText</a>
 EOT;
+			}
 		}
 		return $html;
 	}
@@ -324,8 +334,24 @@ EOT;
 		$test['testPages'] = $testPages;
 		$this->tests[] = $test;
 
-		// Categories use sorting keys instead of link text
+		// Categories use sorting keys instead of link text and don't use fragments
 		if ( !$this->isCategory( $name ) ) {
+			$test = [];
+			$test['testName'] = "Link to $name with fragment, no link text";
+			$test['pageName'] = $name . "#fragment";
+			$test['linkText'] = null;
+			$test['testPages'] = $testPages;
+			$this->tests[] = $test;
+
+			if ( $testPages[0]['redirectName'] === null ) {
+				$test = [];
+				$test['testName'] = "Link to $name, fragment only, no link text";
+				$test['pageName'] = "#fragment";
+				$test['linkText'] = null;
+				$test['testPages'] = $testPages;
+				$this->tests[] = $test;
+			}
+
 			$test = [];
 			$test['testName'] = "Link to $name, page name link text";
 			$test['pageName'] = $name;
