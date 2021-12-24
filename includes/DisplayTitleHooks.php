@@ -141,7 +141,7 @@ class DisplayTitleHooks {
 			if ( $fragment != '' && $target->getNamespace() != NS_CATEGORY ) {
 				$fragment = '#' . $fragment;
 				$fraglen = strlen( $fragment );
-				if ( strrpos( $text, $fragment ) == strlen( $text ) - $fraglen ) {
+				if ( strrpos( $text, $fragment ) === strlen( $text ) - $fraglen ) {
 					$text = substr( $text, 0, 0 - $fraglen );
 					if ( $wrap ) {
 						$html = new HtmlArmor( $text );
