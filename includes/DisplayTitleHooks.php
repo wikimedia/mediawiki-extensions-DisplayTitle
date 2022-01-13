@@ -138,13 +138,18 @@ class DisplayTitleHooks {
 			// skip fragment detection on category pages
 			$fragment = $target->getFragment();
 			if ( $fragment !== '' && $target->getNamespace() != NS_CATEGORY ) {
-				$parts = explode( '#', $text, 2 );
-				$text_title = $parts[0];
-				$text_fragment = $parts[1] ?? null;
-				if ( $text_title === '' || $text_fragment === null ) {
+				$fragmentLength = strlen( $fragment );
+				if ( substr( $text, -$fragmentLength ) === $fragment ) {
+					$textTitle = substr( $text, 0, -( $fragmentLength + 1 ) );
+					$textFragment = $fragment;
+				} else {
+					$textTitle = $text;
+					$textFragment = '';
+				}
+				if ( $textTitle === '' || $textFragment === '' ) {
 					$customized = true;
 				} else {
-					$text = $text_title;
+					$text = $textTitle;
 					if ( $wrap ) {
 						$html = new HtmlArmor( $text );
 					}
