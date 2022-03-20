@@ -264,7 +264,12 @@ class DisplayTitleHooks {
 			$title = $redirectTarget;
 		}
 		$id = $title->getArticleID();
-		$values = PageProps::getInstance()->getProperties( $title, 'displaytitle' );
+		if ( method_exists( MediaWikiServices::class, 'getPageProps' ) ) {
+			// MW 1.36+
+			$values = MediaWikiServices::getInstance()->getPageProps()->getProperties( $title, 'displaytitle' );
+		} else {
+			$values = PageProps::getInstance()->getProperties( $title, 'displaytitle' );
+		}
 		if ( array_key_exists( $id, $values ) ) {
 			$value = $values[$id];
 			if ( trim( str_replace( '&#160;', '', strip_tags( $value ) ) ) !== '' &&
