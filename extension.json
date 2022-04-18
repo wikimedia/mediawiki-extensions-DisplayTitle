@@ -1,6 +1,6 @@
 {
 	"name": "DisplayTitle",
-	"version": "3.1",
+	"version": "3.2",
 	"author": [
 		"[https://www.mediawiki.org/wiki/User:Cindy.cicalese Cindy Cicalese]",
 		"[https://www.semantic-mediawiki.org/wiki/User:Oetterer Tobias Oetterer]"
@@ -40,6 +40,9 @@
 		},
 		"DisplayTitleExcludes": {
 			"value": []
+		},
+		"DisplayTitleFollowRedirects": {
+			"value": true
 		}
 	},
 	"manifest_version": 2

@@ -258,10 +258,12 @@ class DisplayTitleHooks {
 		$originalPageName = $title->getPrefixedText();
 		$wikipage = new WikiPage( $title );
 		$redirect = false;
-		$redirectTarget = $wikipage->getRedirectTarget();
-		if ( $redirectTarget !== null ) {
-			$redirect = true;
-			$title = $redirectTarget;
+		if ( $GLOBALS['wgDisplayTitleFollowRedirects'] ) {
+			$redirectTarget = $wikipage->getRedirectTarget();
+			if ( $redirectTarget !== null ) {
+				$redirect = true;
+				$title = $redirectTarget;
+			}
 		}
 		$id = $title->getArticleID();
 		if ( method_exists( MediaWikiServices::class, 'getPageProps' ) ) {
