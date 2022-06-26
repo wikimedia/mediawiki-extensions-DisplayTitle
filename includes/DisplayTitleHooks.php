@@ -256,7 +256,12 @@ class DisplayTitleHooks {
 		}
 
 		$originalPageName = $title->getPrefixedText();
-		$wikipage = new WikiPage( $title );
+		if ( method_exists( MediaWikiServices::class, 'getWikiPageFactory' ) ) {
+			// MW 1.36+
+			$wikipage = MediaWikiServices::getInstance()->getWikiPageFactory()->newFromTitle( $title );
+		} else {
+			$wikipage = new WikiPage( $title );
+		}
 		$redirect = false;
 		if ( $GLOBALS['wgDisplayTitleFollowRedirects'] ) {
 			$redirectTarget = $wikipage->getRedirectTarget();

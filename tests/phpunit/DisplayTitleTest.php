@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\MediaWikiServices;
+
 /**
  * @covers DisplayTitleHooks::onHtmlPageLinkRendererBegin
  * @covers DisplayTitleHooks::onSelfLinkBegin
@@ -50,7 +52,12 @@ class DisplayTitleTest extends MediaWikiIntegrationTestCase {
 	 */
 	private function createTestPage( $name, $redirectName, $displaytitle ) {
 		$title = Title::newFromText( $name );
-		$page = new WikiPage( $title );
+		if ( method_exists( MediaWikiServices::class, 'getWikiPageFactory' ) ) {
+			// MW 1.36+
+			$page = MediaWikiServices::getInstance()->getWikiPageFactory()->newFromTitle( $title );
+		} else {
+			$page = new WikiPage( $title );
+		}
 		if ( $redirectName !== null ) {
 			$wikitext = '#REDIRECT [[' . $redirectName . ']]';
 		} else {
@@ -174,7 +181,12 @@ EOT;
 			$html = $parserOutput->getText();
 		} else {
 			// get html for category link
-			$page = WikiPage::factory( $title );
+			if ( method_exists( MediaWikiServices::class, 'getWikiPageFactory' ) ) {
+				// MW 1.36+
+				$page = MediaWikiServices::getInstance()->getWikiPageFactory()->newFromTitle( $title );
+			} else {
+				$page = WikiPage::factory( $title );
+			}
 			$context = new RequestContext();
 			$context->setTitle( $title );
 			$context->setUser( $this->getTestUser()->getUser() );
