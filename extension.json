@@ -29,7 +29,7 @@
 		"ParserBeforeInternalParse": "DisplayTitleHooks::onParserBeforeInternalParse",
 		"ParserBeforePreprocess": "DisplayTitleHooks::onParserBeforeInternalParse",
 		"BeforePageDisplay": "DisplayTitleHooks::onBeforePageDisplay",
-		"PersonalUrls": "DisplayTitleHooks::onPersonalUrls",
+		"SkinTemplateNavigation::Universal": "DisplayTitleHooks::onSkinTemplateNavigation__Universal",
 		"HtmlPageLinkRendererBegin": "DisplayTitleHooks::onHtmlPageLinkRendererBegin",
 		"ScribuntoExternalLibraries": "DisplayTitleHooks::onScribuntoExternalLibraries",
 		"SelfLinkBegin": "DisplayTitleHooks::onSelfLinkBegin"

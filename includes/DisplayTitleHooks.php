@@ -35,24 +35,37 @@ class DisplayTitleHooks {
 		return $pagename;
 	}
 
+	// phpcs:disable MediaWiki.NamingConventions.LowerCamelFunctionsName.FunctionName
+
 	/**
-	 * Implements PersonalUrls hook.
-	 * See https://www.mediawiki.org/wiki/Manual:Hooks/PersonalUrls
-	 * Handle links. Implements HtmlPageLinkRendererBegin hook of LinkRenderer class.
+	 * Implements SkinTemplateNavigation::Universal hook.
+	 * See https://www.mediawiki.org/wiki/Manual:Hooks/SkinTemplateNavigation::Universal
+	 *
+	 * Migrated from PersonalUrls hook, see https://phabricator.wikimedia.org/T319087
 	 *
 	 * @since 1.5
-	 * @param array &$personal_urls the array of URLs set up so far
-	 * @param Title $title the Title object of the current article
 	 * @param SkinTemplate $skin SkinTemplate object providing context
+	 * @param array &$links The array of arrays of URLs set up so far
 	 */
-	public static function onPersonalUrls( array &$personal_urls, Title $title,
-		SkinTemplate $skin ) {
-		if ( $skin->getUser()->isRegistered() &&
-			isset( $personal_urls['userpage'] ) ) {
-			$pagename = $personal_urls['userpage']['text'];
-			$title = $skin->getUser()->getUserPage();
-			self::getDisplayTitle( $title, $pagename );
-			$personal_urls['userpage']['text'] = $pagename;
+	public static function onSkinTemplateNavigation__Universal( SkinTemplate $skin, array &$links ) {
+		if ( $skin->getUser()->isRegistered() ) {
+			$menu_urls = $links['user-menu'] ?? [];
+			if ( isset( $menu_urls['userpage'] ) ) {
+				$pagename = $menu_urls['userpage']['text'];
+				$title = $skin->getUser()->getUserPage();
+				self::getDisplayTitle( $title, $pagename );
+				$links['user-menu']['userpage']['text'] = $pagename;
+			}
+			$page_urls = $links['user-page'] ?? [];
+			if ( isset( $page_urls['userpage'] ) ) {
+				// If we determined $pagename already, don't do so again.
+				if ( !isset( $menu_urls['userpage'] ) ) {
+					$pagename = $page_urls['userpage']['text'];
+					$title = $skin->getUser()->getUserPage();
+					self::getDisplayTitle( $title, $pagename );
+				}
+				$links['user-page']['userpage']['text'] = $pagename;
+			}
 		}
 	}
 
