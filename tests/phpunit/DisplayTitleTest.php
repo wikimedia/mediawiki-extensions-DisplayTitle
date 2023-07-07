@@ -88,7 +88,7 @@ class DisplayTitleTest extends MediaWikiIntegrationTestCase {
 			$html = "<a href=\"#$fragment\">#$fragment</a>";
 		} else {
 			$name = $testPages[0]['name'];
-			if ( $testPages[0]['selfLink'] && $fragment === null ) {
+			if ( $testPages[0]['selfLink'] ) {
 				$displaytitle = $testPages[0]['displaytitle'];
 				if ( $linkText === null || $linkText === $name ||
 					( $displaytitle !== null && str_replace( '_', ' ', $linkText ) === $name ) ) {
@@ -99,11 +99,20 @@ class DisplayTitleTest extends MediaWikiIntegrationTestCase {
 						$linkText = $displaytitle;
 					} elseif ( $linkText === null ) {
 						$linkText = $name;
+						if ( $fragment ) {
+							$linkText = $linkText . '#' . $fragment;
+						}
 					}
 				}
-				$html = <<<EOT
+				if ( $fragment ) {
+					$html = <<<EOT
+<a class="mw-selflink-fragment" href="#$fragment">$linkText</a>
+EOT;
+				} else {
+					$html = <<<EOT
 <a class="mw-selflink selflink">$linkText</a>
 EOT;
+				}
 			} else {
 				$isRedirect = $testPages[0]['redirectName'] !== null;
 				$title = Title::newFromText( $name );
