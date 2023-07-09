@@ -270,12 +270,8 @@ class DisplayTitleHooks {
 		}
 
 		$originalPageName = $title->getPrefixedText();
-		if ( method_exists( MediaWikiServices::class, 'getWikiPageFactory' ) ) {
-			// MW 1.36+
-			$wikipage = MediaWikiServices::getInstance()->getWikiPageFactory()->newFromTitle( $title );
-		} else {
-			$wikipage = new WikiPage( $title );
-		}
+		$wikiPageFactory = MediaWikiServices::getInstance()->getWikiPageFactory();
+		$wikipage = $wikiPageFactory->newFromTitle( $title );
 		$redirect = false;
 		if ( $GLOBALS['wgDisplayTitleFollowRedirects'] ) {
 			$redirectTarget = $wikipage->getRedirectTarget();
@@ -285,12 +281,8 @@ class DisplayTitleHooks {
 			}
 		}
 		$id = $title->getArticleID();
-		if ( method_exists( MediaWikiServices::class, 'getPageProps' ) ) {
-			// MW 1.36+
-			$values = MediaWikiServices::getInstance()->getPageProps()->getProperties( $title, 'displaytitle' );
-		} else {
-			$values = PageProps::getInstance()->getProperties( $title, 'displaytitle' );
-		}
+		$pageProps = MediaWikiServices::getInstance()->getPageProps();
+		$values = $pageProps->getProperties( $title, 'displaytitle' );
 		if ( array_key_exists( $id, $values ) ) {
 			$value = $values[$id];
 			if ( trim( str_replace( '&#160;', '', strip_tags( $value ) ) ) !== '' &&
