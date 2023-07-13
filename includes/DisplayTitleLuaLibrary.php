@@ -4,6 +4,7 @@ namespace MediaWiki\Extension\DisplayTitle;
 
 use CoreParserFunctions;
 use Scribunto_LuaLibraryBase;
+use Title;
 
 /**
  * Class DisplayTitleLuaLibrary
@@ -35,20 +36,20 @@ class DisplayTitleLuaLibrary extends Scribunto_LuaLibraryBase {
 	/**
 	 * Returns the display title for a given page.
 	 *
-	 * Mirrors the functionality of parser function #getdisplaytitle, using the same code base.
-	 * @uses DisplayTitleHooks::getdisplaytitleParserFunction, DisplayTitleLuaLibrary::toLua
+	 * Mirrors the functionality of parser function #getdisplaytitle.
+	 * @uses DisplayTitleHooks::getDisplayTitle, DisplayTitleLuaLibrary::toLua
 	 * @param string $pageName the name of the page, the display title should be received for
 	 * @return string[]
 	 */
 	public function getDisplayTitle( $pageName ) {
 		if ( is_string( $pageName ) && strlen( $pageName ) ) {
-			return $this->toLua( DisplayTitleHooks::getdisplaytitleParserFunction(
-				$this->getParser(),
-				$pageName
-			) );
-		} else {
-			return [ '' ];
+			$title = Title::newFromText( $pageName );
+			if ( $title !== null ) {
+				DisplayTitleHooks::getDisplayTitle( $title, $pageName );
+			}
+			return $this->toLua( $pageName );
 		}
+		return [ '' ];
 	}
 
 	/**
