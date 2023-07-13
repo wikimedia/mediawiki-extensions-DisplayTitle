@@ -23,15 +23,22 @@
 	"AutoloadNamespaces": {
 		"MediaWiki\\Extension\\DisplayTitle\\": "includes/"
 	},
+	"HookHandlers": {
+		"main": {
+			"class": "MediaWiki\\Extension\\DisplayTitle\\DisplayTitleHooks",
+			"services": [
+				"MainConfig"
+			]
+		}
+	},
 	"Hooks": {
-		"ParserFirstCallInit": "MediaWiki\\Extension\\DisplayTitle\\DisplayTitleHooks::onParserFirstCallInit",
-		"ParserBeforeInternalParse": "MediaWiki\\Extension\\DisplayTitle\\DisplayTitleHooks::onParserBeforeInternalParse",
-		"ParserBeforePreprocess": "MediaWiki\\Extension\\DisplayTitle\\DisplayTitleHooks::onParserBeforeInternalParse",
-		"BeforePageDisplay": "MediaWiki\\Extension\\DisplayTitle\\DisplayTitleHooks::onBeforePageDisplay",
-		"SkinTemplateNavigation::Universal": "MediaWiki\\Extension\\DisplayTitle\\DisplayTitleHooks::onSkinTemplateNavigation__Universal",
-		"HtmlPageLinkRendererBegin": "MediaWiki\\Extension\\DisplayTitle\\DisplayTitleHooks::onHtmlPageLinkRendererBegin",
-		"ScribuntoExternalLibraries": "MediaWiki\\Extension\\DisplayTitle\\DisplayTitleHooks::onScribuntoExternalLibraries",
-		"SelfLinkBegin": "MediaWiki\\Extension\\DisplayTitle\\DisplayTitleHooks::onSelfLinkBegin"
+		"ParserFirstCallInit": "main",
+		"BeforePageDisplay": "main",
+		"HtmlPageLinkRendererBegin": "main",
+		"OutputPageParserOutput": "main",
+		"SelfLinkBegin": "main",
+		"SkinTemplateNavigation::Universal": "main",
+		"ScribuntoExternalLibraries": "MediaWiki\\Extension\\DisplayTitle\\DisplayTitleHooks::onScribuntoExternalLibraries"
 	},
 	"config": {
 		"DisplayTitleHideSubtitle": {

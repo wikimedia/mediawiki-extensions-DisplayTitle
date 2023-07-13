@@ -2,28 +2,57 @@
 
 namespace MediaWiki\Extension\DisplayTitle;
 
+use Config;
 use HtmlArmor;
+use MediaWiki\Hook\BeforePageDisplayHook;
+use MediaWiki\Hook\OutputPageParserOutputHook;
+use MediaWiki\Hook\ParserFirstCallInitHook;
+use MediaWiki\Hook\SelfLinkBeginHook;
+use MediaWiki\Hook\SkinTemplateNavigation__UniversalHook;
+use MediaWiki\Linker\Hook\HtmlPageLinkRendererBeginHook;
 use MediaWiki\Linker\LinkRenderer;
 use MediaWiki\Linker\LinkTarget;
 use MediaWiki\MediaWikiServices;
 use OutputPage;
 use Parser;
+use ParserOutput;
 use Skin;
 use SkinTemplate;
-use StripState;
 use Title;
 
-class DisplayTitleHooks {
+class DisplayTitleHooks implements
+	ParserFirstCallInitHook,
+	BeforePageDisplayHook,
+	HtmlPageLinkRendererBeginHook,
+	OutputPageParserOutputHook,
+	SelfLinkBeginHook,
+	SkinTemplateNavigation__UniversalHook
+{
+	/**
+	 * @var Config
+	 */
+	private $config;
+
+	/**
+	 * @param Config $config
+	 */
+	public function __construct(
+		Config $config
+	) {
+		$this->config = $config;
+	}
 
 	/**
 	 * Implements ParserFirstCallInit hook.
 	 * See https://www.mediawiki.org/wiki/Manual:Hooks/ParserFirstCallInit
 	 * @since 1.0
-	 * @param Parser &$parser the Parser object
+	 * @param Parser $parser the Parser object
 	 */
-	public static function onParserFirstCallInit( &$parser ) {
-		$parser->setFunctionHook( 'getdisplaytitle',
-			'MediaWiki\Extension\DisplayTitle\DisplayTitleHooks::getdisplaytitleParserFunction' );
+	public function onParserFirstCallInit( $parser ) {
+		$parser->setFunctionHook(
+			'getdisplaytitle',
+			[ $this, 'getdisplaytitleParserFunction' ]
+		);
 	}
 
 	/**
@@ -35,8 +64,7 @@ class DisplayTitleHooks {
 	 * @return string the displaytitle of the page; defaults to pagename if
 	 * displaytitle is not set
 	 */
-	public static function getdisplaytitleParserFunction( Parser $parser,
-		$pagename ) {
+	public function getdisplaytitleParserFunction( Parser $parser, $pagename ) {
 		$title = Title::newFromText( $pagename );
 		if ( $title !== null ) {
 			self::getDisplayTitle( $title, $pagename );
@@ -56,7 +84,7 @@ class DisplayTitleHooks {
 	 * @param SkinTemplate $skin SkinTemplate object providing context
 	 * @param array &$links The array of arrays of URLs set up so far
 	 */
-	public static function onSkinTemplateNavigation__Universal( SkinTemplate $skin, array &$links ) {
+	public function onSkinTemplateNavigation__Universal( $skin, &$links ): void {
 		if ( $skin->getUser()->isRegistered() ) {
 			$menu_urls = $links['user-menu'] ?? [];
 			if ( isset( $menu_urls['userpage'] ) ) {
@@ -91,12 +119,9 @@ class DisplayTitleHooks {
 	 * @param string &$query the query string to add to the generated URL
 	 * @param string &$ret the value to return if the hook returns false
 	 */
-	public static function onHtmlPageLinkRendererBegin(
-		LinkRenderer $linkRenderer, LinkTarget $target, &$text, &$extraAttribs,
-		&$query, &$ret ) {
+	public function onHtmlPageLinkRendererBegin( $linkRenderer, $target, &$text, &$extraAttribs, &$query, &$ret ) {
 		// Do not use DisplayTitle if current page is defined in $wgDisplayTitleExcludes
-		$config = MediaWikiServices::getInstance()->getMainConfig();
-		$request = $config->get( 'Request' );
+		$request = $this->config->get( 'Request' );
 		$title = $request->getVal( 'title' );
 		if ( in_array( $title, $GLOBALS['wgDisplayTitleExcludes'] ) ) {
 			return;
@@ -118,11 +143,9 @@ class DisplayTitleHooks {
 	 * @param string &$prefix Text before link
 	 * @param string &$ret the value to return if the hook returns false
 	 */
-	public static function onSelfLinkBegin( Title $nt, &$html, &$trail,
-		&$prefix, &$ret ) {
+	public function onSelfLinkBegin( $nt, &$html, &$trail, &$prefix, &$ret ) {
 		// Do not use DisplayTitle if current page is defined in $wgDisplayTitleExcludes
-		$config = MediaWikiServices::getInstance()->getMainConfig();
-		$request = $config->get( 'Request' );
+		$request = $this->config->get( 'Request' );
 		$title = $request->getVal( 'title' );
 		if ( in_array( $title, $GLOBALS['wgDisplayTitleExcludes'] ) ) {
 			return;
@@ -195,10 +218,10 @@ class DisplayTitleHooks {
 	 * Display subtitle if requested
 	 *
 	 * @since 1.0
-	 * @param OutputPage &$out the OutputPage object
-	 * @param Skin &$sk the Skin object
+	 * @param OutputPage $out the OutputPage object
+	 * @param Skin $sk the Skin object
 	 */
-	public static function onBeforePageDisplay( OutputPage &$out, Skin &$sk ) {
+	public function onBeforePageDisplay( $out, $sk ): void {
 		if ( $GLOBALS['wgDisplayTitleHideSubtitle'] ) {
 			return;
 		}
@@ -221,25 +244,22 @@ class DisplayTitleHooks {
 	}
 
 	/**
-	 * Implements ParserBeforeInternalParse hook.
-	 * See https://www.mediawiki.org/wiki/Manual:Hooks/ParserBeforeInternalParse
+	 * Implements OutputPageParserOutput hook.
+	 * See https://www.mediawiki.org/wiki/Manual:Hooks/OutputPageParserOutput
 	 * Handle talk page title.
 	 *
+	 * @param OutputPage $outputPage
+	 * @param ParserOutput $parserOutput
 	 * @since 1.0
-	 * @param Parser $parser the Parser object
-	 * @param string &$text the text
-	 * @param StripState $strip_state the strip state
 	 */
-	public static function onParserBeforeInternalParse( Parser $parser, &$text,
-		$strip_state ) {
-		$title = $parser->getTitle();
-		if ( $title !== null && $title->isTalkPage() &&
-			$title->getSubjectPage()->exists() ) {
+	public function onOutputPageParserOutput( $outputPage, $parserOutput ): void {
+		$title = $outputPage->getTitle();
+		if ( $title !== null && $title->isTalkPage() && $title->getSubjectPage()->exists() ) {
 			$found = self::getDisplayTitle( $title->getSubjectPage(), $displaytitle );
 			if ( $found ) {
 				$displaytitle = wfMessage( 'displaytitle-talkpagetitle',
 					$displaytitle )->plain();
-				$parser->getOutput()->setTitleText( $displaytitle );
+				$parserOutput->setTitleText( $displaytitle );
 			}
 		}
 	}
@@ -269,7 +289,7 @@ class DisplayTitleHooks {
 	 * @return bool true if the page has a displaytitle page property that is
 	 * different from the prefixed page name, false otherwise
 	 */
-	private static function getDisplayTitle( Title $title, &$displaytitle,
+	public static function getDisplayTitle( Title $title, &$displaytitle,
 		$wrap = false ) {
 		$title = $title->createFragmentTarget( '' );
 
