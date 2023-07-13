@@ -1,8 +1,17 @@
 <?php
 
+namespace MediaWiki\Extension\DisplayTitle\Tests;
+
+use CommentStoreComment;
+use MediaWikiIntegrationTestCase;
+use ParserOptions;
+use RequestContext;
+use Title;
+use WikitextContent;
+
 /**
- * @covers DisplayTitleHooks::onHtmlPageLinkRendererBegin
- * @covers DisplayTitleHooks::onSelfLinkBegin
+ * @covers \MediaWiki\Extension\DisplayTitle\DisplayTitleHooks::onHtmlPageLinkRendererBegin
+ * @covers \MediaWiki\Extension\DisplayTitle\DisplayTitleHooks::onSelfLinkBegin
  * @group Database
  *
  * Elephant Page = regular content page (no display title)

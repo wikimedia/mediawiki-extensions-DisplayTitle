@@ -1,5 +1,10 @@
 <?php
 
+namespace MediaWiki\Extension\DisplayTitle;
+
+use CoreParserFunctions;
+use Scribunto_LuaLibraryBase;
+
 /**
  * Class DisplayTitleLuaLibrary
  *
@@ -31,7 +36,7 @@ class DisplayTitleLuaLibrary extends Scribunto_LuaLibraryBase {
 	 * Returns the display title for a given page.
 	 *
 	 * Mirrors the functionality of parser function #getdisplaytitle, using the same code base.
-	 * @uses \DisplayTitleHooks::getdisplaytitleParserFunction, \DisplayTitleLuaLibrary::toLua
+	 * @uses DisplayTitleHooks::getdisplaytitleParserFunction, DisplayTitleLuaLibrary::toLua
 	 * @param string $pageName the name of the page, the display title should be received for
 	 * @return string[]
 	 */
@@ -50,7 +55,7 @@ class DisplayTitleLuaLibrary extends Scribunto_LuaLibraryBase {
 	 * Sets the display title for the current page.
 	 *
 	 * Mirrors the functionality of the magic word DISPLAYTITLE.
-	 * @uses \CoreParserFunctions::displaytitle, \DisplayTitleLuaLibrary::toLua
+	 * @uses CoreParserFunctions::displaytitle, DisplayTitleLuaLibrary::toLua
 	 * @param string $newDisplayTitle the new display title for the current page
 	 * @return string[]
 	 */
@@ -69,7 +74,7 @@ class DisplayTitleLuaLibrary extends Scribunto_LuaLibraryBase {
 	 * This takes any value and makes sure, that it can be used inside lua.
 	 * I.e. converts php arrays to lua tables, dumps objects and functions, etc.
 	 * E.g. A resulting table has its numerical indices start with 1
-	 * @uses \Scribunto_LuaLibraryBase::getLuaType
+	 * @uses Scribunto_LuaLibraryBase::getLuaType
 	 * @param mixed $valueToConvert
 	 * @return mixed
 	 */
