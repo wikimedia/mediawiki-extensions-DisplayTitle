@@ -20,19 +20,18 @@
 	"ExtensionMessagesFiles": {
 		"DisplayTitleMagic": "includes/DisplayTitle.i18n.magic.php"
 	},
-	"AutoloadClasses": {
-		"DisplayTitleHooks": "includes/DisplayTitleHooks.php",
-		"DisplayTitleLuaLibrary": "includes/DisplayTitleLuaLibrary.php"
+	"AutoloadNamespaces": {
+		"MediaWiki\\Extension\\DisplayTitle\\": "includes/"
 	},
 	"Hooks": {
-		"ParserFirstCallInit": "DisplayTitleHooks::onParserFirstCallInit",
-		"ParserBeforeInternalParse": "DisplayTitleHooks::onParserBeforeInternalParse",
-		"ParserBeforePreprocess": "DisplayTitleHooks::onParserBeforeInternalParse",
-		"BeforePageDisplay": "DisplayTitleHooks::onBeforePageDisplay",
-		"SkinTemplateNavigation::Universal": "DisplayTitleHooks::onSkinTemplateNavigation__Universal",
-		"HtmlPageLinkRendererBegin": "DisplayTitleHooks::onHtmlPageLinkRendererBegin",
-		"ScribuntoExternalLibraries": "DisplayTitleHooks::onScribuntoExternalLibraries",
-		"SelfLinkBegin": "DisplayTitleHooks::onSelfLinkBegin"
+		"ParserFirstCallInit": "MediaWiki\\Extension\\DisplayTitle\\DisplayTitleHooks::onParserFirstCallInit",
+		"ParserBeforeInternalParse": "MediaWiki\\Extension\\DisplayTitle\\DisplayTitleHooks::onParserBeforeInternalParse",
+		"ParserBeforePreprocess": "MediaWiki\\Extension\\DisplayTitle\\DisplayTitleHooks::onParserBeforeInternalParse",
+		"BeforePageDisplay": "MediaWiki\\Extension\\DisplayTitle\\DisplayTitleHooks::onBeforePageDisplay",
+		"SkinTemplateNavigation::Universal": "MediaWiki\\Extension\\DisplayTitle\\DisplayTitleHooks::onSkinTemplateNavigation__Universal",
+		"HtmlPageLinkRendererBegin": "MediaWiki\\Extension\\DisplayTitle\\DisplayTitleHooks::onHtmlPageLinkRendererBegin",
+		"ScribuntoExternalLibraries": "MediaWiki\\Extension\\DisplayTitle\\DisplayTitleHooks::onScribuntoExternalLibraries",
+		"SelfLinkBegin": "MediaWiki\\Extension\\DisplayTitle\\DisplayTitleHooks::onSelfLinkBegin"
 	},
 	"config": {
 		"DisplayTitleHideSubtitle": {

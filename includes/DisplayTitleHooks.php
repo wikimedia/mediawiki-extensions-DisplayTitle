@@ -1,8 +1,17 @@
 <?php
 
+namespace MediaWiki\Extension\DisplayTitle;
+
+use HtmlArmor;
 use MediaWiki\Linker\LinkRenderer;
 use MediaWiki\Linker\LinkTarget;
 use MediaWiki\MediaWikiServices;
+use OutputPage;
+use Parser;
+use Skin;
+use SkinTemplate;
+use StripState;
+use Title;
 
 class DisplayTitleHooks {
 
@@ -14,7 +23,7 @@ class DisplayTitleHooks {
 	 */
 	public static function onParserFirstCallInit( &$parser ) {
 		$parser->setFunctionHook( 'getdisplaytitle',
-			'DisplayTitleHooks::getdisplaytitleParserFunction' );
+			'MediaWiki\Extension\DisplayTitle\DisplayTitleHooks::getdisplaytitleParserFunction' );
 	}
 
 	/**
