@@ -23,8 +23,11 @@ namespace MediaWiki\Extension\DisplayTitle;
 
 use HtmlArmor;
 use MediaWiki\Config\ServiceOptions;
-use MediaWiki\MediaWikiServices;
+use MediaWiki\Page\RedirectLookup;
+use MediaWiki\Page\WikiPageFactory;
+use NamespaceInfo;
 use OutputPage;
+use PageProps;
 use Title;
 
 class DisplayTitleService {
@@ -50,15 +53,47 @@ class DisplayTitleService {
 	private $followRedirects;
 
 	/**
+	 * @var NamespaceInfo
+	 */
+	private $namespaceInfo;
+
+	/**
+	 * @var RedirectLookup
+	 */
+	private $redirectLookup;
+
+	/**
+	 * @var PageProps
+	 */
+	private $pageProps;
+
+	/**
+	 * @var WikiPageFactory
+	 */
+	private $wikiPageFactory;
+
+	/**
 	 * @param ServiceOptions $options
+	 * @param NamespaceInfo $namespaceInfo
+	 * @param RedirectLookup $redirectLookup
+	 * @param PageProps $pageProps
+	 * @param WikiPageFactory $wikiPageFactory
 	 */
 	public function __construct(
-		ServiceOptions $options
+		ServiceOptions $options,
+		NamespaceInfo $namespaceInfo,
+		RedirectLookup $redirectLookup,
+		PageProps $pageProps,
+		WikiPageFactory $wikiPageFactory
 	) {
 		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
 		$this->hideSubtitle = $options->get( 'DisplayTitleHideSubtitle' );
 		$this->excludes = $options->get( 'DisplayTitleExcludes' );
 		$this->followRedirects = $options->get( 'DisplayTitleFollowRedirects' );
+		$this->namespaceInfo = $namespaceInfo;
+		$this->redirectLookup = $redirectLookup;
+		$this->pageProps = $pageProps;
+		$this->wikiPageFactory = $wikiPageFactory;
 	}
 
 	/**
@@ -142,19 +177,17 @@ class DisplayTitleService {
 		}
 
 		$originalPageName = $title->getPrefixedText();
-		$wikiPageFactory = MediaWikiServices::getInstance()->getWikiPageFactory();
-		$wikipage = $wikiPageFactory->newFromTitle( $title );
+		$wikipage = $this->wikiPageFactory->newFromTitle( $title );
 		$redirect = false;
 		if ( $this->followRedirects ) {
-			$redirectTarget = $wikipage->getRedirectTarget();
+			$redirectTarget = $this->redirectLookup->getRedirectTarget( $wikipage );
 			if ( $redirectTarget !== null ) {
 				$redirect = true;
 				$title = $redirectTarget;
 			}
 		}
 		$id = $title->getArticleID();
-		$pageProps = MediaWikiServices::getInstance()->getPageProps();
-		$values = $pageProps->getProperties( $title, 'displaytitle' );
+		$values = $this->pageProps->getProperties( $title, 'displaytitle' );
 		if ( array_key_exists( $id, $values ) ) {
 			$value = $values[$id];
 			if ( trim( str_replace( '&#160;', '', strip_tags( $value ) ) ) !== '' &&
@@ -189,10 +222,13 @@ class DisplayTitleService {
 		$title = $out->getTitle();
 		if ( !$title->isTalkPage() ) {
 			$found = $this->getDisplayTitle( $title, $displaytitle );
-		} elseif ( $title->getSubjectPage()->exists() ) {
-			$found = $this->getDisplayTitle( $title->getSubjectPage(), $displaytitle );
 		} else {
-			$found = false;
+			$subjectPage = Title::castFromLinkTarget( $this->namespaceInfo->getSubjectPage( $title ) );
+			if ( $subjectPage->exists() ) {
+				$found = $this->getDisplayTitle( $subjectPage, $displaytitle );
+			} else {
+				$found = false;
+			}
 		}
 		if ( $found ) {
 			$subtitle = $title->getPrefixedText();

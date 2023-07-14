@@ -28,7 +28,11 @@ return [
 	'DisplayTitleService' =>
 		static function ( MediaWikiServices $services ): DisplayTitleService {
 			return new DisplayTitleService(
-				new ServiceOptions( DisplayTitleService::CONSTRUCTOR_OPTIONS, $services->getMainConfig() )
+				new ServiceOptions( DisplayTitleService::CONSTRUCTOR_OPTIONS, $services->getMainConfig() ),
+				$services->getNamespaceInfo(),
+				$services->getRedirectLookup(),
+				$services->getPageProps(),
+				$services->getWikiPageFactory()
 			);
 		},
 ];

@@ -782,7 +782,6 @@ class DisplayTitleTest extends MediaWikiIntegrationTestCase {
 		}
 
 		$title = Title::newFromText( $titleText );
-		$page = $wikiPageFactory->newFromTitle( $title );
 		$context = new RequestContext();
 		$context->setTitle( $title );
 		$context->setUser( $user );

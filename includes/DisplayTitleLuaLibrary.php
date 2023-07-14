@@ -25,7 +25,7 @@ class DisplayTitleLuaLibrary extends Scribunto_LuaLibraryBase {
 	 *
 	 * @return array Lua package
 	 */
-	public function register() {
+	public function register(): array {
 		$lib = [
 			'get'   => [ $this, 'getDisplayTitle' ],
 			'set'   => [ $this, 'setDisplayTitle' ],
@@ -42,8 +42,8 @@ class DisplayTitleLuaLibrary extends Scribunto_LuaLibraryBase {
 	 * @param string $pageName the name of the page, the display title should be received for
 	 * @return string[]
 	 */
-	public function getDisplayTitle( $pageName ) {
-		if ( is_string( $pageName ) && strlen( $pageName ) ) {
+	public function getDisplayTitle( string $pageName ): array {
+		if ( strlen( $pageName ) ) {
 			$title = Title::newFromText( $pageName );
 			if ( $title !== null ) {
 				$displayTitleService = MediaWikiServices::getInstance()->get( 'DisplayTitleService' );
@@ -62,8 +62,8 @@ class DisplayTitleLuaLibrary extends Scribunto_LuaLibraryBase {
 	 * @param string $newDisplayTitle the new display title for the current page
 	 * @return string[]
 	 */
-	public function setDisplayTitle( $newDisplayTitle ) {
-		if ( is_string( $newDisplayTitle ) && strlen( $newDisplayTitle ) ) {
+	public function setDisplayTitle( string $newDisplayTitle ): array {
+		if ( strlen( $newDisplayTitle ) ) {
 			return $this->toLua( CoreParserFunctions::displaytitle(
 				$this->getParser(),
 				$newDisplayTitle
@@ -105,7 +105,7 @@ class DisplayTitleLuaLibrary extends Scribunto_LuaLibraryBase {
 	 * @param mixed $val
 	 * @return array
 	 */
-	private function toLua( $val ) {
+	private function toLua( $val ): array {
 		return [ $this->convertToLuaValue( $val ) ];
 	}
 }
