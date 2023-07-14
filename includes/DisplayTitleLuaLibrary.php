@@ -3,6 +3,7 @@
 namespace MediaWiki\Extension\DisplayTitle;
 
 use CoreParserFunctions;
+use MediaWiki\MediaWikiServices;
 use Scribunto_LuaLibraryBase;
 use Title;
 
@@ -45,7 +46,8 @@ class DisplayTitleLuaLibrary extends Scribunto_LuaLibraryBase {
 		if ( is_string( $pageName ) && strlen( $pageName ) ) {
 			$title = Title::newFromText( $pageName );
 			if ( $title !== null ) {
-				DisplayTitleHooks::getDisplayTitle( $title, $pageName );
+				$displayTitleService = MediaWikiServices::getInstance()->get( 'DisplayTitleService' );
+				$displayTitleService->getDisplayTitle( $title, $pageName );
 			}
 			return $this->toLua( $pageName );
 		}

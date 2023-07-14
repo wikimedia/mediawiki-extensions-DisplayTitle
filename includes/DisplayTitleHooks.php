@@ -12,7 +12,6 @@ use MediaWiki\Hook\SkinTemplateNavigation__UniversalHook;
 use MediaWiki\Linker\Hook\HtmlPageLinkRendererBeginHook;
 use MediaWiki\Linker\LinkRenderer;
 use MediaWiki\Linker\LinkTarget;
-use MediaWiki\MediaWikiServices;
 use OutputPage;
 use Parser;
 use ParserOutput;
@@ -34,12 +33,20 @@ class DisplayTitleHooks implements
 	private $config;
 
 	/**
+	 * @var DisplayTitleService
+	 */
+	private $displayTitleService;
+
+	/**
 	 * @param Config $config
+	 * @param DisplayTitleService $displayTitleService
 	 */
 	public function __construct(
-		Config $config
+		Config $config,
+		DisplayTitleService $displayTitleService
 	) {
 		$this->config = $config;
+		$this->displayTitleService = $displayTitleService;
 	}
 
 	/**
@@ -67,7 +74,7 @@ class DisplayTitleHooks implements
 	public function getdisplaytitleParserFunction( Parser $parser, $pagename ) {
 		$title = Title::newFromText( $pagename );
 		if ( $title !== null ) {
-			self::getDisplayTitle( $title, $pagename );
+			$this->displayTitleService->getDisplayTitle( $title, $pagename );
 		}
 		return $pagename;
 	}
@@ -90,7 +97,7 @@ class DisplayTitleHooks implements
 			if ( isset( $menu_urls['userpage'] ) ) {
 				$pagename = $menu_urls['userpage']['text'];
 				$title = $skin->getUser()->getUserPage();
-				self::getDisplayTitle( $title, $pagename );
+				$this->displayTitleService->getDisplayTitle( $title, $pagename );
 				$links['user-menu']['userpage']['text'] = $pagename;
 			}
 			$page_urls = $links['user-page'] ?? [];
@@ -99,7 +106,7 @@ class DisplayTitleHooks implements
 				if ( !isset( $menu_urls['userpage'] ) ) {
 					$pagename = $page_urls['userpage']['text'];
 					$title = $skin->getUser()->getUserPage();
-					self::getDisplayTitle( $title, $pagename );
+					$this->displayTitleService->getDisplayTitle( $title, $pagename );
 				}
 				$links['user-page']['userpage']['text'] = $pagename;
 			}
@@ -120,15 +127,11 @@ class DisplayTitleHooks implements
 	 * @param string &$ret the value to return if the hook returns false
 	 */
 	public function onHtmlPageLinkRendererBegin( $linkRenderer, $target, &$text, &$extraAttribs, &$query, &$ret ) {
-		// Do not use DisplayTitle if current page is defined in $wgDisplayTitleExcludes
 		$request = $this->config->get( 'Request' );
 		$title = $request->getVal( 'title' );
-		if ( in_array( $title, $GLOBALS['wgDisplayTitleExcludes'] ) ) {
-			return;
+		if ( $title ) {
+			$this->displayTitleService->handleLink( $title, Title::newFromLinkTarget( $target ), $text, true );
 		}
-
-		$title = Title::newFromLinkTarget( $target );
-		self::handleLink( $title, $text, true );
 	}
 
 	/**
@@ -144,72 +147,9 @@ class DisplayTitleHooks implements
 	 * @param string &$ret the value to return if the hook returns false
 	 */
 	public function onSelfLinkBegin( $nt, &$html, &$trail, &$prefix, &$ret ) {
-		// Do not use DisplayTitle if current page is defined in $wgDisplayTitleExcludes
 		$request = $this->config->get( 'Request' );
 		$title = $request->getVal( 'title' );
-		if ( in_array( $title, $GLOBALS['wgDisplayTitleExcludes'] ) ) {
-			return;
-		}
-
-		self::handleLink( $nt, $html, false );
-	}
-
-	/**
-	 * Helper function. Determines link text for self-links and standard links.
-	 *
-	 * Handle links. If a link is customized by a user (e. g. [[Target|Text]])
-	 * it should remain intact. Let us assume a link is not customized if its
-	 * html is the prefixed or (to support Semantic MediaWiki queries)
-	 * non-prefixed title of the target page.
-	 *
-	 * @since 1.3
-	 * @param Title $target the Title object that the link is pointing to
-	 * @param string|HtmlArmor &$html the HTML of the link text
-	 * @param bool $wrap whether to wrap result in HtmlArmor
-	 */
-	private static function handleLink( Title $target, &$html, $wrap ) {
-		$customized = false;
-		if ( isset( $html ) ) {
-			$text = null;
-			if ( is_string( $html ) ) {
-				$text = str_replace( '_', ' ', $html );
-			} elseif ( is_int( $html ) ) {
-				$text = (string)$html;
-			} elseif ( $html instanceof HtmlArmor ) {
-				$text = str_replace( '_', ' ', HtmlArmor::getHtml( $html ) );
-			}
-
-			// handle named Semantic MediaWiki subobjects (see T275984) by removing trailing fragment
-			// skip fragment detection on category pages
-			$fragment = '#' . $target->getFragment();
-			if ( $fragment !== '#' && $target->getNamespace() != NS_CATEGORY ) {
-				$fragmentLength = strlen( $fragment );
-				if ( substr( $text, -$fragmentLength ) === $fragment ) {
-					// Remove fragment text from the link text
-					$textTitle = substr( $text, 0, -$fragmentLength );
-					$textFragment = substr( $fragment, 1 );
-				} else {
-					$textTitle = $text;
-					$textFragment = '';
-				}
-				if ( $textTitle === '' || $textFragment === '' ) {
-					$customized = true;
-				} else {
-					$text = $textTitle;
-					if ( $wrap ) {
-						$html = new HtmlArmor( $text );
-					}
-					$customized = $text != $target->getPrefixedText() && $text != $target->getText();
-				}
-			} else {
-				$customized = $text !== null
-					&& $text != $target->getPrefixedText()
-					&& $text != $target->getText();
-			}
-		}
-		if ( !$customized ) {
-			self::getDisplayTitle( $target, $html, $wrap );
-		}
+		$this->displayTitleService->handleLink( $title, $nt, $html, false );
 	}
 
 	/**
@@ -222,25 +162,7 @@ class DisplayTitleHooks implements
 	 * @param Skin $sk the Skin object
 	 */
 	public function onBeforePageDisplay( $out, $sk ): void {
-		if ( $GLOBALS['wgDisplayTitleHideSubtitle'] ) {
-			return;
-		}
-		$title = $out->getTitle();
-		if ( !$title->isTalkPage() ) {
-			$found = self::getDisplayTitle( $title, $displaytitle );
-		} elseif ( $title->getSubjectPage()->exists() ) {
-			$found = self::getDisplayTitle( $title->getSubjectPage(), $displaytitle );
-		} else {
-			$found = false;
-		}
-		if ( $found ) {
-			$subtitle = $title->getPrefixedText();
-			$old_subtitle = $out->getSubtitle();
-			if ( $old_subtitle !== '' ) {
-				$subtitle .= ' / ' . $old_subtitle;
-			}
-			$out->setSubtitle( $subtitle );
-		}
+		$this->displayTitleService->setSubtitle( $out );
 	}
 
 	/**
@@ -248,14 +170,14 @@ class DisplayTitleHooks implements
 	 * See https://www.mediawiki.org/wiki/Manual:Hooks/OutputPageParserOutput
 	 * Handle talk page title.
 	 *
+	 * @since 1.0
 	 * @param OutputPage $outputPage
 	 * @param ParserOutput $parserOutput
-	 * @since 1.0
 	 */
 	public function onOutputPageParserOutput( $outputPage, $parserOutput ): void {
 		$title = $outputPage->getTitle();
 		if ( $title !== null && $title->isTalkPage() && $title->getSubjectPage()->exists() ) {
-			$found = self::getDisplayTitle( $title->getSubjectPage(), $displaytitle );
+			$found = $this->displayTitleService->getDisplayTitle( $title->getSubjectPage(), $displaytitle );
 			if ( $found ) {
 				$displaytitle = wfMessage( 'displaytitle-talkpagetitle',
 					$displaytitle )->plain();
@@ -277,58 +199,5 @@ class DisplayTitleHooks implements
 		if ( $engine === 'lua' ) {
 			$extraLibraries['mw.ext.displaytitle'] = 'DisplayTitleLuaLibrary';
 		}
-	}
-
-	/**
-	 * Get displaytitle page property text.
-	 *
-	 * @since 1.0
-	 * @param Title $title the Title object for the page
-	 * @param string &$displaytitle to return the display title, if set
-	 * @param bool $wrap whether to wrap result in HtmlArmor
-	 * @return bool true if the page has a displaytitle page property that is
-	 * different from the prefixed page name, false otherwise
-	 */
-	public static function getDisplayTitle( Title $title, &$displaytitle,
-		$wrap = false ) {
-		$title = $title->createFragmentTarget( '' );
-
-		if ( !$title->canExist() ) {
-			// If the Title isn't a valid content page (e.g. Special:UserLogin), just return.
-			return false;
-		}
-
-		$originalPageName = $title->getPrefixedText();
-		$wikiPageFactory = MediaWikiServices::getInstance()->getWikiPageFactory();
-		$wikipage = $wikiPageFactory->newFromTitle( $title );
-		$redirect = false;
-		if ( $GLOBALS['wgDisplayTitleFollowRedirects'] ) {
-			$redirectTarget = $wikipage->getRedirectTarget();
-			if ( $redirectTarget !== null ) {
-				$redirect = true;
-				$title = $redirectTarget;
-			}
-		}
-		$id = $title->getArticleID();
-		$pageProps = MediaWikiServices::getInstance()->getPageProps();
-		$values = $pageProps->getProperties( $title, 'displaytitle' );
-		if ( array_key_exists( $id, $values ) ) {
-			$value = $values[$id];
-			if ( trim( str_replace( '&#160;', '', strip_tags( $value ) ) ) !== '' &&
-				$value !== $originalPageName ) {
-				$displaytitle = $value;
-				if ( $wrap ) {
-					$displaytitle = new HtmlArmor( $displaytitle );
-				}
-				return true;
-			}
-		} elseif ( $redirect ) {
-			$displaytitle = $title->getPrefixedText();
-			if ( $wrap ) {
-				$displaytitle = new HtmlArmor( $displaytitle );
-			}
-			return true;
-		}
-		return false;
 	}
 }
