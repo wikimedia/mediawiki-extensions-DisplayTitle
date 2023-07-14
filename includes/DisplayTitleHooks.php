@@ -12,6 +12,7 @@ use MediaWiki\Hook\SkinTemplateNavigation__UniversalHook;
 use MediaWiki\Linker\Hook\HtmlPageLinkRendererBeginHook;
 use MediaWiki\Linker\LinkRenderer;
 use MediaWiki\Linker\LinkTarget;
+use NamespaceInfo;
 use OutputPage;
 use Parser;
 use ParserOutput;
@@ -38,15 +39,23 @@ class DisplayTitleHooks implements
 	private $displayTitleService;
 
 	/**
+	 * @var NamespaceInfo
+	 */
+	private $namespaceInfo;
+
+	/**
 	 * @param Config $config
 	 * @param DisplayTitleService $displayTitleService
+	 * @param NamespaceInfo $namespaceInfo
 	 */
 	public function __construct(
 		Config $config,
-		DisplayTitleService $displayTitleService
+		DisplayTitleService $displayTitleService,
+		NamespaceInfo $namespaceInfo
 	) {
 		$this->config = $config;
 		$this->displayTitleService = $displayTitleService;
+		$this->namespaceInfo = $namespaceInfo;
 	}
 
 	/**
@@ -71,7 +80,7 @@ class DisplayTitleHooks implements
 	 * @return string the displaytitle of the page; defaults to pagename if
 	 * displaytitle is not set
 	 */
-	public function getdisplaytitleParserFunction( Parser $parser, $pagename ) {
+	public function getdisplaytitleParserFunction( Parser $parser, string $pagename ): string {
 		$title = Title::newFromText( $pagename );
 		if ( $title !== null ) {
 			$this->displayTitleService->getDisplayTitle( $title, $pagename );
@@ -88,15 +97,15 @@ class DisplayTitleHooks implements
 	 * Migrated from PersonalUrls hook, see https://phabricator.wikimedia.org/T319087
 	 *
 	 * @since 1.5
-	 * @param SkinTemplate $skin SkinTemplate object providing context
+	 * @param SkinTemplate $sktemplate SkinTemplate object providing context
 	 * @param array &$links The array of arrays of URLs set up so far
 	 */
-	public function onSkinTemplateNavigation__Universal( $skin, &$links ): void {
-		if ( $skin->getUser()->isRegistered() ) {
+	public function onSkinTemplateNavigation__Universal( $sktemplate, &$links ): void {
+		if ( $sktemplate->getUser()->isRegistered() ) {
 			$menu_urls = $links['user-menu'] ?? [];
 			if ( isset( $menu_urls['userpage'] ) ) {
 				$pagename = $menu_urls['userpage']['text'];
-				$title = $skin->getUser()->getUserPage();
+				$title = $sktemplate->getUser()->getUserPage();
 				$this->displayTitleService->getDisplayTitle( $title, $pagename );
 				$links['user-menu']['userpage']['text'] = $pagename;
 			}
@@ -105,7 +114,7 @@ class DisplayTitleHooks implements
 				// If we determined $pagename already, don't do so again.
 				if ( !isset( $menu_urls['userpage'] ) ) {
 					$pagename = $page_urls['userpage']['text'];
-					$title = $skin->getUser()->getUserPage();
+					$title = $sktemplate->getUser()->getUserPage();
 					$this->displayTitleService->getDisplayTitle( $title, $pagename );
 				}
 				$links['user-page']['userpage']['text'] = $pagename;
@@ -122,11 +131,11 @@ class DisplayTitleHooks implements
 	 * @param LinkRenderer $linkRenderer the LinkRenderer object
 	 * @param LinkTarget $target the LinkTarget that the link is pointing to
 	 * @param string|HtmlArmor &$text the contents that the <a> tag should have
-	 * @param array &$extraAttribs the HTML attributes that the <a> tag should have
+	 * @param array &$customAttribs the HTML attributes that the <a> tag should have
 	 * @param string &$query the query string to add to the generated URL
 	 * @param string &$ret the value to return if the hook returns false
 	 */
-	public function onHtmlPageLinkRendererBegin( $linkRenderer, $target, &$text, &$extraAttribs, &$query, &$ret ) {
+	public function onHtmlPageLinkRendererBegin( $linkRenderer, $target, &$text, &$customAttribs, &$query, &$ret ) {
 		$request = $this->config->get( 'Request' );
 		$title = $request->getVal( 'title' );
 		if ( $title ) {
@@ -159,9 +168,9 @@ class DisplayTitleHooks implements
 	 *
 	 * @since 1.0
 	 * @param OutputPage $out the OutputPage object
-	 * @param Skin $sk the Skin object
+	 * @param Skin $skin the Skin object
 	 */
-	public function onBeforePageDisplay( $out, $sk ): void {
+	public function onBeforePageDisplay( $out, $skin ): void {
 		$this->displayTitleService->setSubtitle( $out );
 	}
 
@@ -176,12 +185,15 @@ class DisplayTitleHooks implements
 	 */
 	public function onOutputPageParserOutput( $outputPage, $parserOutput ): void {
 		$title = $outputPage->getTitle();
-		if ( $title !== null && $title->isTalkPage() && $title->getSubjectPage()->exists() ) {
-			$found = $this->displayTitleService->getDisplayTitle( $title->getSubjectPage(), $displaytitle );
-			if ( $found ) {
-				$displaytitle = wfMessage( 'displaytitle-talkpagetitle',
-					$displaytitle )->plain();
-				$parserOutput->setTitleText( $displaytitle );
+		if ( $title !== null && $title->isTalkPage() ) {
+			$subjectPage = Title::castFromLinkTarget( $this->namespaceInfo->getSubjectPage( $title ) );
+			if ( $subjectPage->exists() ) {
+				$found = $this->displayTitleService->getDisplayTitle( $subjectPage, $displaytitle );
+				if ( $found ) {
+					$displaytitle = wfMessage( 'displaytitle-talkpagetitle',
+						$displaytitle )->plain();
+					$parserOutput->setTitleText( $displaytitle );
+				}
 			}
 		}
 	}
@@ -195,7 +207,7 @@ class DisplayTitleHooks implements
 	 * @param string $engine engine in use
 	 * @param array &$extraLibraries list of registered libraries
 	 */
-	public static function onScribuntoExternalLibraries( $engine, array &$extraLibraries ) {
+	public static function onScribuntoExternalLibraries( string $engine, array &$extraLibraries ) {
 		if ( $engine === 'lua' ) {
 			$extraLibraries['mw.ext.displaytitle'] = 'DisplayTitleLuaLibrary';
 		}
