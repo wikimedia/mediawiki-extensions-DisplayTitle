@@ -20,6 +20,9 @@
 	"ExtensionMessagesFiles": {
 		"DisplayTitleMagic": "includes/DisplayTitle.i18n.magic.php"
 	},
+	"ServiceWiringFiles": [
+		"includes/ServiceWiring.php"
+	],
 	"AutoloadNamespaces": {
 		"MediaWiki\\Extension\\DisplayTitle\\": "includes/"
 	},
@@ -27,7 +30,8 @@
 		"main": {
 			"class": "MediaWiki\\Extension\\DisplayTitle\\DisplayTitleHooks",
 			"services": [
-				"MainConfig"
+				"MainConfig",
+				"DisplayTitleService"
 			]
 		}
 	},
