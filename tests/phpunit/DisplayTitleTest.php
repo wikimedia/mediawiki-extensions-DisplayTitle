@@ -115,7 +115,7 @@ class DisplayTitleTest extends MediaWikiIntegrationTestCase {
 		];
 
 		yield [
-			'Link to page without display title, lowercaese page name, page name link text',
+			'Link to page without display title, lowercase page name, page name link text',
 			'Test Page',
 			'[[elephant Page|Elephant Page]]',
 			$extraPages,
@@ -123,7 +123,7 @@ class DisplayTitleTest extends MediaWikiIntegrationTestCase {
 		];
 
 		yield [
-			'Link to page without display title, lowercaese page name, lowercase page name link text',
+			'Link to page without display title, lowercase page name, lowercase page name link text',
 			'Test Page',
 			'[[elephant Page|elephant Page]]',
 			$extraPages,
@@ -131,11 +131,11 @@ class DisplayTitleTest extends MediaWikiIntegrationTestCase {
 		];
 
 		yield [
-			'Link to page without display title, lowercaese page name, page name link text',
+			'Link to page without display title, lowercase page name link text',
 			'Test Page',
-			'[[elephant Page|Elephant Page]]',
+			'[[Elephant Page|elephant Page]]',
 			$extraPages,
-			'Elephant Page'
+			'elephant Page'
 		];
 
 		yield [
@@ -147,7 +147,7 @@ class DisplayTitleTest extends MediaWikiIntegrationTestCase {
 		];
 
 		yield [
-			'Link to page without display title, lowercaese page name, other link text',
+			'Link to page without display title, lowercase page name, other link text',
 			'Test Page',
 			'[[elephant Page|Coyote]]',
 			$extraPages,
@@ -201,7 +201,7 @@ class DisplayTitleTest extends MediaWikiIntegrationTestCase {
 		];
 
 		yield [
-			'Redirect to page without display title, lowercaese page name, page name link text',
+			'Redirect to page without display title, lowercase page name, page name link text',
 			'Test Page',
 			'[[redirect To Elephant Page|Redirect To Elephant Page]]',
 			$extraPages,
@@ -209,7 +209,7 @@ class DisplayTitleTest extends MediaWikiIntegrationTestCase {
 		];
 
 		yield [
-			'Redirect to page without display title, lowercaese page name, lowercase page name link text',
+			'Redirect to page without display title, lowercase page name, lowercase page name link text',
 			'Test Page',
 			'[[redirect To Elephant Page|redirect To Elephant Page]]',
 			$extraPages,
@@ -217,11 +217,11 @@ class DisplayTitleTest extends MediaWikiIntegrationTestCase {
 		];
 
 		yield [
-			'Redirect to page without display title, lowercaese page name, page name link text',
+			'Redirect to page without display title, lowercase page name link text',
 			'Test Page',
-			'[[redirect To Elephant Page|Redirect To Elephant Page]]',
+			'[[Redirect To Elephant Page|redirect To Elephant Page]]',
 			$extraPages,
-			'Elephant Page'
+			'redirect To Elephant Page'
 		];
 
 		yield [
@@ -233,7 +233,7 @@ class DisplayTitleTest extends MediaWikiIntegrationTestCase {
 		];
 
 		yield [
-			'Redirect to page without display title, lowercaese page name, other link text',
+			'Redirect to page without display title, lowercase page name, other link text',
 			'Test Page',
 			'[[redirect To Elephant Page|Coyote]]',
 			$extraPages,
@@ -286,7 +286,7 @@ class DisplayTitleTest extends MediaWikiIntegrationTestCase {
 		];
 
 		yield [
-			'Link to user page without display title, lowercaese page name, page name link text',
+			'Link to user page without display title, lowercase page name, page name link text',
 			'Test Page',
 			'[[User:elephant Page|User:Elephant Page]]',
 			$extraPages,
@@ -294,7 +294,7 @@ class DisplayTitleTest extends MediaWikiIntegrationTestCase {
 		];
 
 		yield [
-			'Link to user page without display title, lowercaese page name, lowercase page name link text',
+			'Link to user page without display title, lowercase page name, lowercase page name link text',
 			'Test Page',
 			'[[User:elephant Page|User:elephant Page]]',
 			$extraPages,
@@ -302,11 +302,11 @@ class DisplayTitleTest extends MediaWikiIntegrationTestCase {
 		];
 
 		yield [
-			'Link to user page without display title, lowercaese page name, page name link text',
+			'Link to user page without display title, lowercase page name link text',
 			'Test Page',
-			'[[User:elephant Page|User:Elephant Page]]',
+			'[[User:Elephant Page|User:elephant Page]]',
 			$extraPages,
-			'User:Elephant Page'
+			'User:elephant Page'
 		];
 
 		yield [
@@ -318,7 +318,7 @@ class DisplayTitleTest extends MediaWikiIntegrationTestCase {
 		];
 
 		yield [
-			'Link to user page without display title, lowercaese page name, other link text',
+			'Link to user page without display title, lowercase page name, other link text',
 			'Test Page',
 			'[[User:elephant Page|Coyote]]',
 			$extraPages,
@@ -371,7 +371,7 @@ class DisplayTitleTest extends MediaWikiIntegrationTestCase {
 		];
 
 		yield [
-			'Link to page with display title, lowercaese page name, page name link text',
+			'Link to page with display title, lowercase page name, page name link text',
 			'Test Page',
 			'[[dingo Page|Dingo Page]]',
 			$extraPages,
@@ -379,7 +379,7 @@ class DisplayTitleTest extends MediaWikiIntegrationTestCase {
 		];
 
 		yield [
-			'Link to page with display title, lowercaese page name, lowercase page name link text',
+			'Link to page with display title, lowercase page name, lowercase page name link text',
 			'Test Page',
 			'[[dingo Page|dingo Page]]',
 			$extraPages,
@@ -387,11 +387,11 @@ class DisplayTitleTest extends MediaWikiIntegrationTestCase {
 		];
 
 		yield [
-			'Link to page with display title, lowercaese page name, page name link text',
+			'Link to page with display title, lowercase page name link text',
 			'Test Page',
-			'[[dingo Page|Dingo Page]]',
+			'[[Dingo Page|dingo Page]]',
 			$extraPages,
-			'Zebra'
+			'dingo Page'
 		];
 
 		yield [
@@ -403,7 +403,7 @@ class DisplayTitleTest extends MediaWikiIntegrationTestCase {
 		];
 
 		yield [
-			'Link to page with display title, lowercaese page name, other link text',
+			'Link to page with display title, lowercase page name, other link text',
 			'Test Page',
 			'[[dingo Page|Coyote]]',
 			$extraPages,
@@ -457,7 +457,7 @@ class DisplayTitleTest extends MediaWikiIntegrationTestCase {
 		];
 
 		yield [
-			'Redirect to page with display title, lowercaese page name, page name link text',
+			'Redirect to page with display title, lowercase page name, page name link text',
 			'Test Page',
 			'[[redirect To Dingo Page|Redirect To Dingo Page]]',
 			$extraPages,
@@ -465,7 +465,7 @@ class DisplayTitleTest extends MediaWikiIntegrationTestCase {
 		];
 
 		yield [
-			'Redirect to page with display title, lowercaese page name, lowercase page name link text',
+			'Redirect to page with display title, lowercase page name, lowercase page name link text',
 			'Test Page',
 			'[[redirect To Dingo Page|redirect To Dingo Page]]',
 			$extraPages,
@@ -473,11 +473,11 @@ class DisplayTitleTest extends MediaWikiIntegrationTestCase {
 		];
 
 		yield [
-			'Redirect to page with display title, lowercaese page name, page name link text',
+			'Redirect to page with display title, lowercase page name link text',
 			'Test Page',
-			'[[redirect To Dingo Page|Redirect To Dingo Page]]',
+			'[[Redirect To Dingo Page|redirect To Dingo Page]]',
 			$extraPages,
-			'Zebra'
+			'redirect To Dingo Page'
 		];
 
 		yield [
@@ -489,7 +489,7 @@ class DisplayTitleTest extends MediaWikiIntegrationTestCase {
 		];
 
 		yield [
-			'Redirect to page with display title, lowercaese page name, other link text',
+			'Redirect to page with display title, lowercase page name, other link text',
 			'Test Page',
 			'[[redirect To Dingo Page|Coyote]]',
 			$extraPages,
@@ -542,7 +542,7 @@ class DisplayTitleTest extends MediaWikiIntegrationTestCase {
 		];
 
 		yield [
-			'Link to user page with display title, lowercaese page name, page name link text',
+			'Link to user page with display title, lowercase page name, page name link text',
 			'Test Page',
 			'[[User:dingo Page|User:Dingo Page]]',
 			$extraPages,
@@ -550,7 +550,7 @@ class DisplayTitleTest extends MediaWikiIntegrationTestCase {
 		];
 
 		yield [
-			'Link to user page with display title, lowercaese page name, lowercase page name link text',
+			'Link to user page with display title, lowercase page name, lowercase page name link text',
 			'Test Page',
 			'[[User:dingo Page|User:dingo Page]]',
 			$extraPages,
@@ -558,11 +558,11 @@ class DisplayTitleTest extends MediaWikiIntegrationTestCase {
 		];
 
 		yield [
-			'Link to user page with display title, lowercaese page name, page name link text',
+			'Link to user page with display title, lowercase page name link text',
 			'Test Page',
-			'[[User:dingo Page|User:Dingo Page]]',
+			'[[User:Dingo Page|User:dingo Page]]',
 			$extraPages,
-			'Zebra'
+			'User:dingo Page'
 		];
 
 		yield [
@@ -574,7 +574,7 @@ class DisplayTitleTest extends MediaWikiIntegrationTestCase {
 		];
 
 		yield [
-			'Link to user page with display title, lowercaese page name, other link text',
+			'Link to user page with display title, lowercase page name, other link text',
 			'Test Page',
 			'[[User:dingo Page|Coyote]]',
 			$extraPages,
@@ -656,24 +656,24 @@ class DisplayTitleTest extends MediaWikiIntegrationTestCase {
 		];
 
 		yield [
-			'Self link to page without display title, lowercaese page name, page name link text',
+			'Self link to page without display title, lowercase page name, page name link text',
 			'Test Page',
 			'[[snake Page|Snake Page]]',
 			'Snake Page'
 		];
 
 		yield [
-			'Self link to page without display title, lowercaese page name, lowercase page name link text',
+			'Self link to page without display title, lowercase page name, lowercase page name link text',
 			'Test Page',
 			'[[snake Page|snake Page]]',
 			'snake Page'
 		];
 
 		yield [
-			'Self link to page without display title, lowercaese page name, page name link text',
+			'Self link to page without display title, lowercase page name link text',
 			'Snake Page',
-			'[[snake Page|Snake Page]]',
-			'Snake Page'
+			'[[Snake Page|snake Page]]',
+			'snake Page'
 		];
 
 		yield [
@@ -684,7 +684,7 @@ class DisplayTitleTest extends MediaWikiIntegrationTestCase {
 		];
 
 		yield [
-			'Self link to page without display title, lowercaese page name, other link text',
+			'Self link to page without display title, lowercase page name, other link text',
 			'Test Page',
 			'[[snake Page|Coyote]]',
 			'Coyote'
@@ -735,24 +735,24 @@ class DisplayTitleTest extends MediaWikiIntegrationTestCase {
 		];
 
 		yield [
-			'Self link to page with display title, lowercaese page name, page name link text',
+			'Self link to page with display title, lowercase page name, page name link text',
 			'Test Page',
 			'{{DISPLAYTITLE:Zebra}}[[sable Page|Sable Page]]',
 			'Zebra'
 		];
 
 		yield [
-			'Self link to page with display title, lowercaese page name, lowercase page name link text',
+			'Self link to page with display title, lowercase page name, lowercase page name link text',
 			'Test Page',
 			'{{DISPLAYTITLE:Zebra}}[[sable Page|sable Page]]',
 			'sable Page'
 		];
 
 		yield [
-			'Self link to page with display title, lowercaese page name, page name link text',
+			'Self link to page with display title, lowercase page name link text',
 			'Sable Page',
-			'{{DISPLAYTITLE:Zebra}}[[sable Page|Sable Page]]',
-			'Zebra'
+			'{{DISPLAYTITLE:Zebra}}[[Sable Page|sable Page]]',
+			'sable Page'
 		];
 
 		yield [
@@ -763,7 +763,7 @@ class DisplayTitleTest extends MediaWikiIntegrationTestCase {
 		];
 
 		yield [
-			'Self link to page with display title, lowercaese page name, other link text',
+			'Self link to page with display title, lowercase page name, other link text',
 			'Test Page',
 			'{{DISPLAYTITLE:Zebra}}[[sable Page|Coyote]]',
 			'Coyote'
@@ -842,6 +842,69 @@ class DisplayTitleTest extends MediaWikiIntegrationTestCase {
 			'[[Category:dingo Category]]',
 			$extraPages,
 			'Zebra'
+		];
+	}
+
+	/**
+	 * @dataProvider provideTestNoFollowRedirect
+	 */
+	public function testNoFollowRedirect( $testName, $wikitext ) {
+		$this->setMwGlobals( 'wgDisplayTitleFollowRedirects', false );
+		Title::clearCaches();
+		$wikiPageFactory = $this->getServiceContainer()->getWikiPageFactory();
+
+		$extraPages = [
+			'Dingo Page' => '{{DISPLAYTITLE:Zebra}}',
+			'Redirect To Dingo Page' => '#REDIRECT [[Dingo Page]]'
+		];
+
+		$user = $this->getTestSysop()->getUser();
+		foreach ( $extraPages as $extraTitle => $extraWikitext ) {
+			$page = $wikiPageFactory->newFromTitle( Title::newFromText( $extraTitle ) );
+			$updater = $page->newPageUpdater( $user );
+			$updater->setContent( 'main', new WikitextContent( $extraWikitext ) );
+			$updater->saveRevision(
+				CommentStoreComment::newUnsavedComment( 'new test page' ),
+				EDIT_AUTOSUMMARY
+			);
+		}
+
+		$title = Title::newFromText( 'Test Page' );
+		$content = new WikitextContent( $wikitext );
+		$parserOptions = new ParserOptions( $user );
+		$parserOptions->setRemoveComments( true );
+		$contentRenderer = $this->getServiceContainer()->getContentRenderer();
+		$parserOutput = $contentRenderer->getParserOutput( $content, $title->toPageIdentity(), null, $parserOptions );
+		$actual = $parserOutput->getText();
+
+		$this->assertStringNotContainsString( '>Zebra</a>', $actual, $testName );
+	}
+
+	public function provideTestNoFollowRedirect() {
+		// link to redirect to content page with display title
+		yield [
+			'Redirect to page with display title, no link text',
+			'[[Redirect To Dingo Page]]'
+		];
+
+		yield [
+			'Redirect to page with display title, fragment, no link text',
+			'[[Redirect To Dingo Page#Fragment]]'
+		];
+
+		yield [
+			'Redirect to page with display title, page name link text',
+			'[[Redirect To Dingo Page|Redirect To Dingo Page]]'
+		];
+
+		yield [
+			'Redirect to page with display title, page name with underscores link text',
+			'[[Redirect To Dingo Page|Redirect_To_Dingo_Page]]'
+		];
+
+		yield [
+			'Redirect to page with display title, lowercase page name, page name link text',
+			'[[redirect To Dingo Page|Redirect To Dingo Page]]'
 		];
 	}
 }
