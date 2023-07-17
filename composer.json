@@ -1,4 +1,14 @@
 {
+	"name": "mediawiki/display-title",
+	"type": "mediawiki-extension",
+	"description": "Uses displaytitle page property in link text, subtitle, and talk page title; provides parser function to query displaytitle",
+	"keywords": [
+		"wiki",
+		"MediaWiki",
+		"extension"
+	],
+	"homepage": "https://www.mediawiki.org/wiki/Extension:DisplayTitle",
+	"license": "MIT",
 	"require-dev": {
 		"mediawiki/mediawiki-codesniffer": "41.0.0",
 		"mediawiki/minus-x": "1.1.1",
