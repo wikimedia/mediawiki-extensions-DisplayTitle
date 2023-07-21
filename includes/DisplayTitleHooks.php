@@ -12,13 +12,17 @@ use MediaWiki\Hook\SkinTemplateNavigation__UniversalHook;
 use MediaWiki\Linker\Hook\HtmlPageLinkRendererBeginHook;
 use MediaWiki\Linker\LinkRenderer;
 use MediaWiki\Linker\LinkTarget;
+use MediaWiki\Preferences\Hook\GetPreferencesHook;
+use MediaWiki\User\UserOptionsManager;
 use NamespaceInfo;
 use OutputPage;
 use Parser;
 use ParserOutput;
+use RequestContext;
 use Skin;
 use SkinTemplate;
 use Title;
+use User;
 
 class DisplayTitleHooks implements
 	ParserFirstCallInitHook,
@@ -26,7 +30,8 @@ class DisplayTitleHooks implements
 	HtmlPageLinkRendererBeginHook,
 	OutputPageParserOutputHook,
 	SelfLinkBeginHook,
-	SkinTemplateNavigation__UniversalHook
+	SkinTemplateNavigation__UniversalHook,
+	GetPreferencesHook
 {
 	/**
 	 * @var Config
@@ -44,6 +49,11 @@ class DisplayTitleHooks implements
 	private $namespaceInfo;
 
 	/**
+	 * @var UserOptionsManager
+	 */
+	private $userOptionsManager;
+
+	/**
 	 * @param Config $config
 	 * @param DisplayTitleService $displayTitleService
 	 * @param NamespaceInfo $namespaceInfo
@@ -51,11 +61,13 @@ class DisplayTitleHooks implements
 	public function __construct(
 		Config $config,
 		DisplayTitleService $displayTitleService,
-		NamespaceInfo $namespaceInfo
+		NamespaceInfo $namespaceInfo,
+		UserOptionsManager $userOptionsManager
 	) {
 		$this->config = $config;
 		$this->displayTitleService = $displayTitleService;
 		$this->namespaceInfo = $namespaceInfo;
+		$this->userOptionsManager = $userOptionsManager;
 	}
 
 	/**
@@ -101,6 +113,9 @@ class DisplayTitleHooks implements
 	 * @param array &$links The array of arrays of URLs set up so far
 	 */
 	public function onSkinTemplateNavigation__Universal( $sktemplate, &$links ): void {
+		if ( !$this->userOptionsManager->getOption( $sktemplate->getUser(), 'displaytitle-enable' ) ) {
+			return;
+		}
 		if ( $sktemplate->getUser()->isRegistered() ) {
 			$menu_urls = $links['user-menu'] ?? [];
 			if ( isset( $menu_urls['userpage'] ) ) {
@@ -136,6 +151,9 @@ class DisplayTitleHooks implements
 	 * @param string &$ret the value to return if the hook returns false
 	 */
 	public function onHtmlPageLinkRendererBegin( $linkRenderer, $target, &$text, &$customAttribs, &$query, &$ret ) {
+		if ( !$this->userOptionsManager->getOption( RequestContext::getMain()->getUser(), 'displaytitle-enable' ) ) {
+			return;
+		}
 		$request = $this->config->get( 'Request' );
 		$title = $request->getVal( 'title' );
 		if ( $title ) {
@@ -156,6 +174,9 @@ class DisplayTitleHooks implements
 	 * @param string &$ret the value to return if the hook returns false
 	 */
 	public function onSelfLinkBegin( $nt, &$html, &$trail, &$prefix, &$ret ) {
+		if ( !$this->userOptionsManager->getOption( RequestContext::getMain()->getUser(), 'displaytitle-enable' ) ) {
+			return;
+		}
 		$request = $this->config->get( 'Request' );
 		$title = $request->getVal( 'title' );
 		$this->displayTitleService->handleLink( $title, $nt, $html, false );
@@ -171,6 +192,9 @@ class DisplayTitleHooks implements
 	 * @param Skin $skin the Skin object
 	 */
 	public function onBeforePageDisplay( $out, $skin ): void {
+		if ( !$this->userOptionsManager->getOption( $skin->getUser(), 'displaytitle-enable' ) ) {
+			return;
+		}
 		$this->displayTitleService->setSubtitle( $out );
 	}
 
@@ -184,6 +208,9 @@ class DisplayTitleHooks implements
 	 * @param ParserOutput $parserOutput
 	 */
 	public function onOutputPageParserOutput( $outputPage, $parserOutput ): void {
+		if ( !$this->userOptionsManager->getOption( $outputPage->getUser(), 'displaytitle-enable' ) ) {
+			return;
+		}
 		$title = $outputPage->getTitle();
 		if ( $title !== null && $title->isTalkPage() ) {
 			$subjectPage = Title::castFromLinkTarget( $this->namespaceInfo->getSubjectPage( $title ) );
@@ -211,5 +238,22 @@ class DisplayTitleHooks implements
 		if ( $engine === 'lua' ) {
 			$extraLibraries['mw.ext.displaytitle'] = 'DisplayTitleLuaLibrary';
 		}
+	}
+
+	/**
+	 * Implements GetPreferences hook.
+	 * See https://www.mediawiki.org/wiki/Manual:Hooks/GetPreferences
+	 * Customize configuration UI for DisplayTitle user preference
+	 *
+	 * @since 4.0
+	 * @param User $user User whose preferences are being modified
+	 * @param array &$preferences Preferences description array
+	 */
+	public function onGetPreferences( $user, &$preferences ) {
+		$preferences['displaytitle-enable'] = [
+			'type' => 'toggle',
+			'label-message' => 'prefs-displaytitle-enable',
+			'section' => 'rendering/displaytitle'
+		];
 	}
 }
