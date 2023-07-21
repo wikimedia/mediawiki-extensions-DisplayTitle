@@ -57,6 +57,7 @@ class DisplayTitleHooks implements
 	 * @param Config $config
 	 * @param DisplayTitleService $displayTitleService
 	 * @param NamespaceInfo $namespaceInfo
+	 * @param UserOptionsManager $userOptionsManager
 	 */
 	public function __construct(
 		Config $config,
