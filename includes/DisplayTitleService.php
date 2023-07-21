@@ -150,7 +150,7 @@ class DisplayTitleService {
 			} else {
 				$customized = $text !== null
 					&& $text != $target->getPrefixedText()
-					&& $text != $target->getText();
+					&& $text != $target->getSubpageText();
 			}
 		}
 		if ( !$customized ) {
