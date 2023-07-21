@@ -231,12 +231,7 @@ class DisplayTitleService {
 			}
 		}
 		if ( $found ) {
-			$subtitle = $title->getPrefixedText();
-			$old_subtitle = $out->getSubtitle();
-			if ( $old_subtitle !== '' ) {
-				$subtitle .= ' / ' . $old_subtitle;
-			}
-			$out->setSubtitle( $subtitle );
+			$out->addSubtitle( "<span class=\"mw-displaytitle-subtitle\">" . $title->getPrefixedText() . "</span>" );
 		}
 	}
 }
