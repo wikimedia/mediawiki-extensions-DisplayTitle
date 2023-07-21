@@ -114,6 +114,17 @@ class DisplayTitleService {
 		if ( in_array( $pageTitle, $this->excludes ) ) {
 			return;
 		}
+
+		// Do not use DisplayTitle if the current page is a redirect to the page being linked
+		$title = Title::newFromText( $pageTitle );
+		if ( $title->canExist() ) {
+			$wikipage = $this->wikiPageFactory->newFromTitle( $title );
+			$redirectTarget = $this->redirectLookup->getRedirectTarget( $wikipage );
+			if ( $redirectTarget && $pageTitle === $target->getPrefixedText() ) {
+				return;
+			}
+		}
+
 		$customized = false;
 		if ( isset( $html ) ) {
 			$text = null;
