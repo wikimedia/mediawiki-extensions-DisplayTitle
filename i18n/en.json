@@ -5,5 +5,7 @@
 		]
 	},
 	"displaytitle-desc": "Uses displaytitle page property in link text, subtitle, and talk page title; provides parser function to query displaytitle",
-	"displaytitle-talkpagetitle": "Discuss $1"
+	"displaytitle-talkpagetitle": "Discuss $1",
+	"prefs-displaytitle": "Display title",
+	"prefs-displaytitle-enable": "Enable display title in links"
 }
