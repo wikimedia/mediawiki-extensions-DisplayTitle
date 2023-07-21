@@ -32,7 +32,8 @@
 			"services": [
 				"MainConfig",
 				"DisplayTitleService",
-				"NamespaceInfo"
+				"NamespaceInfo",
+				"UserOptionsManager"
 			]
 		}
 	},
@@ -43,6 +44,7 @@
 		"OutputPageParserOutput": "main",
 		"SelfLinkBegin": "main",
 		"SkinTemplateNavigation::Universal": "main",
+		"GetPreferences": "main",
 		"ScribuntoExternalLibraries": "MediaWiki\\Extension\\DisplayTitle\\DisplayTitleHooks::onScribuntoExternalLibraries"
 	},
 	"config": {
@@ -55,6 +57,9 @@
 		"DisplayTitleFollowRedirects": {
 			"value": true
 		}
+	},
+	"DefaultUserOptions": {
+		"displaytitle-enable": true
 	},
 	"manifest_version": 2
 }
