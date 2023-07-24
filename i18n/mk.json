@@ -5,5 +5,7 @@
 		]
 	},
 	"displaytitle-desc": "Го користи својството „displaytitle“ во текст на врска, поднаслов и наслов на разговорна страница; дава расчленувачка функција за побараување на „displaytitle“",
-	"displaytitle-talkpagetitle": "Поразговарајте за $1"
+	"displaytitle-talkpagetitle": "Поразговарајте за $1",
+	"prefs-displaytitle": "Наслов за приказ",
+	"prefs-displaytitle-enable": "Овозможи наслов за приказ во врските"
 }
