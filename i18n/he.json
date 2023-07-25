@@ -5,5 +5,7 @@
 		]
 	},
 	"displaytitle-desc": "משתמשת במאפיין הדף displaytitle בטקסט קישור, תת־כותרת, וכותרת דף שיחה; מספקת פונקציית מפענח לשאילתה על displaytitle",
-	"displaytitle-talkpagetitle": "דיון על $1"
+	"displaytitle-talkpagetitle": "דיון על $1",
+	"prefs-displaytitle": "כותרת התצוגה",
+	"prefs-displaytitle-enable": "הפעלת כותרת תצוגה בקישורים"
 }
