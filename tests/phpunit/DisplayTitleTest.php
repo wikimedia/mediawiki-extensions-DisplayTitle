@@ -3,7 +3,6 @@
 namespace MediaWiki\Extension\DisplayTitle\Tests;
 
 use CommentStoreComment;
-use FauxRequest;
 use MediaWikiIntegrationTestCase;
 use ParserOptions;
 use RequestContext;
@@ -30,13 +29,7 @@ class DisplayTitleTest extends MediaWikiIntegrationTestCase {
 		parent::setUp();
 		$this->setMwGlobals( 'wgAllowDisplayTitle', true );
 		$this->setMwGlobals( 'wgRestrictDisplayTitle', false );
-		$request = new FauxRequest(
-			[
-				'title' => 'Main Page'
-			],
-			true
-		);
-		$this->setRequest( $request );
+		RequestContext::getMain()->setTitle( Title::newFromText( 'Main Page' ) );
 	}
 
 	/**

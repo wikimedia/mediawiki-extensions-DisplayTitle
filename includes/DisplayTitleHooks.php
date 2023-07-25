@@ -16,6 +16,7 @@ use NamespaceInfo;
 use OutputPage;
 use Parser;
 use ParserOutput;
+use RequestContext;
 use Skin;
 use SkinTemplate;
 use Title;
@@ -136,10 +137,14 @@ class DisplayTitleHooks implements
 	 * @param string &$ret the value to return if the hook returns false
 	 */
 	public function onHtmlPageLinkRendererBegin( $linkRenderer, $target, &$text, &$customAttribs, &$query, &$ret ) {
-		$request = $this->config->get( 'Request' );
-		$title = $request->getVal( 'title' );
+		$title = RequestContext::getMain()->getTitle();
 		if ( $title ) {
-			$this->displayTitleService->handleLink( $title, Title::newFromLinkTarget( $target ), $text, true );
+			$this->displayTitleService->handleLink(
+				$title->getPrefixedText(),
+				Title::newFromLinkTarget( $target ),
+				$text,
+				true
+			);
 		}
 	}
 
@@ -156,9 +161,7 @@ class DisplayTitleHooks implements
 	 * @param string &$ret the value to return if the hook returns false
 	 */
 	public function onSelfLinkBegin( $nt, &$html, &$trail, &$prefix, &$ret ) {
-		$request = $this->config->get( 'Request' );
-		$title = $request->getVal( 'title' );
-		$this->displayTitleService->handleLink( $title, $nt, $html, false );
+		$this->displayTitleService->handleLink( $nt->getPrefixedText(), $nt, $html, false );
 	}
 
 	/**
