@@ -9,7 +9,5 @@
 		]
 	},
 	"displaytitle-desc": "{{desc|name=Display Title|url=https://www.mediawiki.org/wiki/Extension:DisplayTitle}}",
-	"displaytitle-talkpagetitle": "Format string for the title of a talk page; $1 is the displaytitle of the subject page corresponding to the talk page.\n{{Identical|Discuss}}",
-	"prefs-displaytitle": "Used in user preferences.\\n{{Identical|Display title}}",
-	"prefs-displaytitle-enable": "Used in [[Special:Preferences]], tab \\\"Display title\\\"."
+	"displaytitle-talkpagetitle": "Format string for the title of a talk page; $1 is the displaytitle of the subject page corresponding to the talk page.\n{{Identical|Discuss}}"
 }
