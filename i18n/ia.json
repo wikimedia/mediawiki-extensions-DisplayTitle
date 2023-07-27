@@ -5,7 +5,5 @@
 		]
 	},
 	"displaytitle-desc": "Usa le proprietate de pagina \"displaytitle\" in le textos de ligamines, subtitulos e paginas de discussion. Forni un function del analysator syntactic pro realisar consultas de \"displaytitle\".",
-	"displaytitle-talkpagetitle": "Discuter $1",
-	"prefs-displaytitle": "Titulo a monstrar",
-	"prefs-displaytitle-enable": "Activar le titulo a monstrar in ligamines"
+	"displaytitle-talkpagetitle": "Discuter $1"
 }

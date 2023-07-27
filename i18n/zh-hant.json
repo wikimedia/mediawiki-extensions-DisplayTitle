@@ -6,7 +6,5 @@
 		]
 	},
 	"displaytitle-desc": "在連結文字、副標題，以及對話頁面標題使用顯示標題頁面屬性，來提供用於查詢顯示標題的解析函式。",
-	"displaytitle-talkpagetitle": "討論$1",
-	"prefs-displaytitle": "顯示標題",
-	"prefs-displaytitle-enable": "啟用連結裡的顯示標題"
+	"displaytitle-talkpagetitle": "討論$1"
 }

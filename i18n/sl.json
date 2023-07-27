@@ -5,7 +5,5 @@
 		]
 	},
 	"displaytitle-desc": "Uporablja lastnost »displaytitle« strani v besedilu povezav, podnaslovu in naslovu pogovorne strani; zagotavlja funkcijo razčlenjevalnika za pridobitev vrednosti te lastnosti",
-	"displaytitle-talkpagetitle": "Razpravljajte o $1",
-	"prefs-displaytitle": "Prikazni naslov",
-	"prefs-displaytitle-enable": "V povezavah omogoči prikazni naslov"
+	"displaytitle-talkpagetitle": "Razpravljajte o $1"
 }
