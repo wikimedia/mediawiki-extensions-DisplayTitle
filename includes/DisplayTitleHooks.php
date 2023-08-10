@@ -212,7 +212,7 @@ class DisplayTitleHooks implements
 	 */
 	public static function onScribuntoExternalLibraries( string $engine, array &$extraLibraries ) {
 		if ( $engine === 'lua' ) {
-			$extraLibraries['mw.ext.displaytitle'] = 'DisplayTitleLuaLibrary';
+			$extraLibraries['mw.ext.displaytitle'] = DisplayTitleLuaLibrary::class;
 		}
 	}
 }
