@@ -2,7 +2,6 @@
 
 namespace MediaWiki\Extension\DisplayTitle;
 
-use Config;
 use HtmlArmor;
 use MediaWiki\Hook\BeforePageDisplayHook;
 use MediaWiki\Hook\OutputPageParserOutputHook;
@@ -30,11 +29,6 @@ class DisplayTitleHooks implements
 	SkinTemplateNavigation__UniversalHook
 {
 	/**
-	 * @var Config
-	 */
-	private $config;
-
-	/**
 	 * @var DisplayTitleService
 	 */
 	private $displayTitleService;
@@ -45,16 +39,13 @@ class DisplayTitleHooks implements
 	private $namespaceInfo;
 
 	/**
-	 * @param Config $config
 	 * @param DisplayTitleService $displayTitleService
 	 * @param NamespaceInfo $namespaceInfo
 	 */
 	public function __construct(
-		Config $config,
 		DisplayTitleService $displayTitleService,
 		NamespaceInfo $namespaceInfo
 	) {
-		$this->config = $config;
 		$this->displayTitleService = $displayTitleService;
 		$this->namespaceInfo = $namespaceInfo;
 	}

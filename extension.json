@@ -30,7 +30,6 @@
 		"main": {
 			"class": "MediaWiki\\Extension\\DisplayTitle\\DisplayTitleHooks",
 			"services": [
-				"MainConfig",
 				"DisplayTitleService",
 				"NamespaceInfo"
 			]
