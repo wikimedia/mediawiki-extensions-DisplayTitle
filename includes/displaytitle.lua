@@ -1,7 +1,7 @@
 --- This is the interface table for the extension display title
 --
---	@version 1.2
---	@author Tobias Oetterer
+-- @version 1.2
+-- @author Tobias Oetterer
 --
 
 local displayTitle = {}
