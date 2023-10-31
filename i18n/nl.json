@@ -1,6 +1,9 @@
 {
 	"@metadata": {
-		"authors": []
+		"authors": [
+			"McDutchie"
+		]
 	},
+	"displaytitle-desc": "Gebruikt de pagina-eigenschap ‘displaytitle’ in koppelingstekst, ondertitel en overlegpagina-titel; biedt een parserfunctie voor het opvragen van ‘displaytitle’",
 	"displaytitle-talkpagetitle": "Bespreek $1"
 }
