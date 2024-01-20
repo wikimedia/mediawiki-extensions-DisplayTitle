@@ -133,7 +133,10 @@ class DisplayTitleService {
 			} elseif ( is_int( $html ) ) {
 				$text = (string)$html;
 			} elseif ( $html instanceof HtmlArmor ) {
-				$text = str_replace( '_', ' ', HtmlArmor::getHtml( $html ) );
+				$text = HtmlArmor::getHtml( $html );
+				// Remove html tags used for highlighting matched words in the title, see T355481
+				$text = strip_tags( $text );
+				$text = str_replace( '_', ' ', $text );
 			}
 
 			// handle named Semantic MediaWiki subobjects (see T275984) by removing trailing fragment
