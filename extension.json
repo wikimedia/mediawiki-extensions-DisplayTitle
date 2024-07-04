@@ -33,6 +33,9 @@
 				"DisplayTitleService",
 				"NamespaceInfo"
 			]
+		},
+		"scribunto": {
+			"class": "MediaWiki\\Extension\\DisplayTitle\\ScribuntoHooks"
 		}
 	},
 	"Hooks": {
@@ -42,7 +45,7 @@
 		"OutputPageParserOutput": "main",
 		"SelfLinkBegin": "main",
 		"SkinTemplateNavigation::Universal": "main",
-		"ScribuntoExternalLibraries": "MediaWiki\\Extension\\DisplayTitle\\DisplayTitleHooks::onScribuntoExternalLibraries"
+		"ScribuntoExternalLibraries": "scribunto"
 	},
 	"config": {
 		"DisplayTitleHideSubtitle": {
