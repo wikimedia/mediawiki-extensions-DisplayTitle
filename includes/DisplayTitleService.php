@@ -194,7 +194,7 @@ class DisplayTitleService {
 			$redirectTarget = $this->redirectLookup->getRedirectTarget( $wikipage );
 			if ( $redirectTarget !== null ) {
 				$redirect = true;
-				$title = $redirectTarget;
+				$title = Title::newFromLinkTarget( $redirectTarget );
 			}
 		}
 		$id = $title->getArticleID();
