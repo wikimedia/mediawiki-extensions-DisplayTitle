@@ -650,14 +650,14 @@ class DisplayTitleTest extends MediaWikiIntegrationTestCase {
 
 		yield [
 			'Self link to page without display title, lowercase page name, page name link text',
-			'Test Page',
+			'Snake Page',
 			'[[snake Page|Snake Page]]',
 			'Snake Page'
 		];
 
 		yield [
 			'Self link to page without display title, lowercase page name, lowercase page name link text',
-			'Test Page',
+			'Snake Page',
 			'[[snake Page|snake Page]]',
 			'snake Page'
 		];
@@ -678,7 +678,7 @@ class DisplayTitleTest extends MediaWikiIntegrationTestCase {
 
 		yield [
 			'Self link to page without display title, lowercase page name, other link text',
-			'Test Page',
+			'Snake Page',
 			'[[snake Page|Coyote]]',
 			'Coyote'
 		];
@@ -729,14 +729,14 @@ class DisplayTitleTest extends MediaWikiIntegrationTestCase {
 
 		yield [
 			'Self link to page with display title, lowercase page name, page name link text',
-			'Test Page',
+			'Sable Page',
 			'{{DISPLAYTITLE:Zebra}}[[sable Page|Sable Page]]',
 			'Zebra'
 		];
 
 		yield [
 			'Self link to page with display title, lowercase page name, lowercase page name link text',
-			'Test Page',
+			'Sable Page',
 			'{{DISPLAYTITLE:Zebra}}[[sable Page|sable Page]]',
 			'sable Page'
 		];
@@ -757,7 +757,7 @@ class DisplayTitleTest extends MediaWikiIntegrationTestCase {
 
 		yield [
 			'Self link to page with display title, lowercase page name, other link text',
-			'Test Page',
+			'Sable Page',
 			'{{DISPLAYTITLE:Zebra}}[[sable Page|Coyote]]',
 			'Coyote'
 		];
