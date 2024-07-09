@@ -27,8 +27,10 @@ class DisplayTitleTest extends MediaWikiIntegrationTestCase {
 
 	public function setUp(): void {
 		parent::setUp();
-		$this->setMwGlobals( 'wgAllowDisplayTitle', true );
-		$this->setMwGlobals( 'wgRestrictDisplayTitle', false );
+		$this->overrideConfigValues( [
+			'AllowDisplayTitle' => true,
+			'RestrictDisplayTitle' => false
+		] );
 		RequestContext::getMain()->setTitle( Title::newFromText( 'Main Page' ) );
 	}
 
@@ -842,7 +844,7 @@ class DisplayTitleTest extends MediaWikiIntegrationTestCase {
 	 * @dataProvider provideTestNoFollowRedirect
 	 */
 	public function testNoFollowRedirect( $testName, $wikitext ) {
-		$this->setMwGlobals( 'wgDisplayTitleFollowRedirects', false );
+		$this->overrideConfigValue( 'DisplayTitleFollowRedirects', false );
 		Title::clearCaches();
 		$wikiPageFactory = $this->getServiceContainer()->getWikiPageFactory();
 
