@@ -142,7 +142,7 @@ class DisplayTitleService {
 			// handle named Semantic MediaWiki subobjects (see T275984) by removing trailing fragment
 			// skip fragment detection on category pages
 			$fragment = '#' . $target->getFragment();
-			if ( $fragment !== '#' && $target->getNamespace() != NS_CATEGORY ) {
+			if ( $text !== null && $fragment !== '#' && $target->getNamespace() != NS_CATEGORY ) {
 				$fragmentLength = strlen( $fragment );
 				if ( substr( $text, -$fragmentLength ) === $fragment ) {
 					// Remove fragment text from the link text
@@ -167,7 +167,7 @@ class DisplayTitleService {
 					&& $text != $target->getSubpageText();
 			}
 		}
-		if ( !$customized ) {
+		if ( !$customized && $html !== null ) {
 			$this->getDisplayTitle( $target, $html, $wrap );
 		}
 	}
@@ -208,6 +208,7 @@ class DisplayTitleService {
 				$value !== $originalPageName ) {
 				$displaytitle = $value;
 				if ( $wrap ) {
+					// @phan-suppress-next-line SecurityCheck-XSS
 					$displaytitle = new HtmlArmor( $displaytitle );
 				}
 				return true;
