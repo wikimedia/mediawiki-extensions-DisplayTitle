@@ -83,8 +83,8 @@ class DisplayTitleLuaLibrary extends Scribunto_LuaLibraryBase {
 	 */
 	private function convertToLuaValue( $valueToConvert ) {
 		$type = $this->getLuaType( $valueToConvert );
-		if ( $type == 'nil'
-			|| $type == 'function'
+		if ( $type === 'nil'
+			|| $type === 'function'
 			|| preg_match( '/^PHP .*/', $valueToConvert )
 		) {
 			return null;
