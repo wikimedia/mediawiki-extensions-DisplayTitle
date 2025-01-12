@@ -126,7 +126,7 @@ class DisplayTitleService {
 		}
 
 		$customized = false;
-		if ( isset( $html ) ) {
+		if ( $html !== null ) {
 			$text = null;
 			if ( is_string( $html ) ) {
 				$text = str_replace( '_', ' ', $html );
