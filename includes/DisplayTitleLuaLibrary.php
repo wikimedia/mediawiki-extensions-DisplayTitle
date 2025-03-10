@@ -5,7 +5,7 @@ namespace MediaWiki\Extension\DisplayTitle;
 use CoreParserFunctions;
 use MediaWiki\Extension\Scribunto\Engines\LuaCommon\LibraryBase;
 use MediaWiki\MediaWikiServices;
-use Title;
+use MediaWiki\Title\Title;
 
 /**
  * Class DisplayTitleLuaLibrary

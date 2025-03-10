@@ -11,14 +11,14 @@ use MediaWiki\Hook\SkinTemplateNavigation__UniversalHook;
 use MediaWiki\Linker\Hook\HtmlPageLinkRendererBeginHook;
 use MediaWiki\Linker\LinkRenderer;
 use MediaWiki\Linker\LinkTarget;
-use NamespaceInfo;
-use OutputPage;
+use MediaWiki\Output\OutputPage;
+use MediaWiki\Title\NamespaceInfo;
+use MediaWiki\Title\Title;
 use Parser;
 use ParserOutput;
 use RequestContext;
 use Skin;
 use SkinTemplate;
-use Title;
 
 class DisplayTitleHooks implements
 	ParserFirstCallInitHook,

@@ -23,12 +23,12 @@ namespace MediaWiki\Extension\DisplayTitle;
 
 use HtmlArmor;
 use MediaWiki\Config\ServiceOptions;
+use MediaWiki\Output\OutputPage;
+use MediaWiki\Page\PageProps;
 use MediaWiki\Page\RedirectLookup;
 use MediaWiki\Page\WikiPageFactory;
-use NamespaceInfo;
-use OutputPage;
-use PageProps;
-use Title;
+use MediaWiki\Title\NamespaceInfo;
+use MediaWiki\Title\Title;
 
 class DisplayTitleService {
 	public const CONSTRUCTOR_OPTIONS = [

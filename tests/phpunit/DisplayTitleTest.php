@@ -2,11 +2,11 @@
 
 namespace MediaWiki\Extension\DisplayTitle\Tests;
 
-use CommentStoreComment;
+use MediaWiki\CommentStore\CommentStoreComment;
+use MediaWiki\Title\Title;
 use MediaWikiIntegrationTestCase;
 use ParserOptions;
 use RequestContext;
-use Title;
 use WikitextContent;
 
 /**
