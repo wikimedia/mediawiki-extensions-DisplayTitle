@@ -37,48 +37,14 @@ class DisplayTitleService {
 		'DisplayTitleFollowRedirects'
 	];
 
-	/**
-	 * @var bool
-	 */
-	private $hideSubtitle;
+	private bool $hideSubtitle;
+	private array $excludes;
+	private bool $followRedirects;
+	private NamespaceInfo $namespaceInfo;
+	private RedirectLookup $redirectLookup;
+	private PageProps $pageProps;
+	private WikiPageFactory $wikiPageFactory;
 
-	/**
-	 * @var array
-	 */
-	private $excludes;
-
-	/**
-	 * @var bool
-	 */
-	private $followRedirects;
-
-	/**
-	 * @var NamespaceInfo
-	 */
-	private $namespaceInfo;
-
-	/**
-	 * @var RedirectLookup
-	 */
-	private $redirectLookup;
-
-	/**
-	 * @var PageProps
-	 */
-	private $pageProps;
-
-	/**
-	 * @var WikiPageFactory
-	 */
-	private $wikiPageFactory;
-
-	/**
-	 * @param ServiceOptions $options
-	 * @param NamespaceInfo $namespaceInfo
-	 * @param RedirectLookup $redirectLookup
-	 * @param PageProps $pageProps
-	 * @param WikiPageFactory $wikiPageFactory
-	 */
 	public function __construct(
 		ServiceOptions $options,
 		NamespaceInfo $namespaceInfo,
