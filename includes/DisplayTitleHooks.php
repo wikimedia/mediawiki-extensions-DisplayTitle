@@ -129,8 +129,8 @@ class DisplayTitleHooks implements
 	 * @param string &$ret the value to return if the hook returns false
 	 */
 	public function onHtmlPageLinkRendererBegin( $linkRenderer, $target, &$text, &$customAttribs, &$query, &$ret ) {
-		$title = RequestContext::getMain()->getTitle();
-		if ( $title ) {
+		if ( RequestContext::getMain()->hasTitle() ) {
+			$title = RequestContext::getMain()->getTitle();
 			$this->displayTitleService->handleLink(
 				$title->getPrefixedText(),
 				Title::newFromLinkTarget( $target ),
