@@ -74,8 +74,12 @@ class DisplayTitleHooks implements
 	 */
 	public function getdisplaytitleParserFunction( Parser $parser, string $pagename ): string {
 		$title = Title::newFromText( $pagename );
+		$originalPagename = $pagename;
 		if ( $title !== null ) {
 			$this->displayTitleService->getDisplayTitle( $title, $pagename );
+		}
+		if ( $pagename === null ) {
+			return $originalPagename;
 		}
 		return $pagename;
 	}
