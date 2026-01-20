@@ -37,29 +37,21 @@ class DisplayTitleService {
 		'DisplayTitleFollowRedirects'
 	];
 
-	private bool $hideSubtitle;
-	private array $excludes;
-	private bool $followRedirects;
-	private NamespaceInfo $namespaceInfo;
-	private RedirectLookup $redirectLookup;
-	private PageProps $pageProps;
-	private WikiPageFactory $wikiPageFactory;
+	private readonly bool $hideSubtitle;
+	private readonly array $excludes;
+	private readonly bool $followRedirects;
 
 	public function __construct(
 		ServiceOptions $options,
-		NamespaceInfo $namespaceInfo,
-		RedirectLookup $redirectLookup,
-		PageProps $pageProps,
-		WikiPageFactory $wikiPageFactory
+		private readonly NamespaceInfo $namespaceInfo,
+		private readonly RedirectLookup $redirectLookup,
+		private readonly PageProps $pageProps,
+		private readonly WikiPageFactory $wikiPageFactory,
 	) {
 		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
 		$this->hideSubtitle = $options->get( 'DisplayTitleHideSubtitle' );
 		$this->excludes = $options->get( 'DisplayTitleExcludes' );
 		$this->followRedirects = $options->get( 'DisplayTitleFollowRedirects' );
-		$this->namespaceInfo = $namespaceInfo;
-		$this->redirectLookup = $redirectLookup;
-		$this->pageProps = $pageProps;
-		$this->wikiPageFactory = $wikiPageFactory;
 	}
 
 	/**

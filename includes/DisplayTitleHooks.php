@@ -28,15 +28,10 @@ class DisplayTitleHooks implements
 	SelfLinkBeginHook,
 	SkinTemplateNavigation__UniversalHook
 {
-	private DisplayTitleService $displayTitleService;
-	private NamespaceInfo $namespaceInfo;
-
 	public function __construct(
-		DisplayTitleService $displayTitleService,
-		NamespaceInfo $namespaceInfo
+		private readonly DisplayTitleService $displayTitleService,
+		private readonly NamespaceInfo $namespaceInfo,
 	) {
-		$this->displayTitleService = $displayTitleService;
-		$this->namespaceInfo = $namespaceInfo;
 	}
 
 	/**
