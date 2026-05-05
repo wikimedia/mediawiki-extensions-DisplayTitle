@@ -1,6 +1,9 @@
 {
 	"@metadata": {
-		"authors": []
+		"authors": [
+			"Tensama0415"
+		]
 	},
+	"displaytitle-desc": "링크 텍스트, 부제 및 토론 문서 제목에서 displaytitle 문서 속성을 사용하며, displaytitle을 쿼리하는 파서 함수를 제공합니다",
 	"displaytitle-talkpagetitle": "$1 토론하기"
 }
