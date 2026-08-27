@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"Wizzard"
+		]
+	},
+	"displaytitle-desc": "Používa vlastnosť stránky displaytitle v texte odkazov, v podnadpise a v názve diskusnej stránky; poskytuje funkciu syntaktického analyzátora na zisťovanie displaytitle",
+	"displaytitle-talkpagetitle": "Diskusia o $1"
+}
